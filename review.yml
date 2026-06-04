@@ -1,0 +1,51 @@
+---
+name: Hong Kong University of Science and Technology
+description: Hong Kong University of Science and Technology public developer/API footprint review for APIs.json cataloging.
+url: https://raw.githubusercontent.com/api-evangelist/hkust/refs/heads/main/review.yml
+created: '2026-06-03'
+modified: '2026-06-03'
+reviews:
+  - date: '2026-06-03'
+    rating: 3
+    summary: >-
+      HKUST has a genuine, named developer footprint: an Azure API Management
+      developer portal and API Gateway operated by ITSO, an Elastic Stack Open
+      Data Platform, and DataSpace@HKUST, a Dataverse 6.1 repository whose Native
+      API was verified live (/api/info/version returned version 6.1). The
+      developer portal, ITSO service pages, and official website all returned
+      HTTP 200. However most access is gated behind HKUST affiliation, sign-up,
+      and a data access request, and individual API specs are not openly listed,
+      so the public self-service surface is limited. The DataSpace OAI-PMH
+      endpoint returned 503. No public endpoints were fabricated; only verified
+      properties are cataloged.
+    endpoints:
+      - url: https://hkust.developer.azure-api.net/
+        status: 200
+        note: Azure API Management developer portal landing page; live.
+      - url: https://hkust.developer.azure-api.net/apis
+        status: 200
+        note: APIs listing page; live but listings require sign-in to enumerate.
+      - url: https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal
+        status: 200
+        note: ITSO API Gateway & API Portal service description page.
+      - url: https://dataspace.hkust.edu.hk/
+        status: 200
+        note: DataSpace@HKUST research data repository (Dataverse), live.
+      - url: https://dataspace.hkust.edu.hk/api/info/version
+        status: 200
+        note: Dataverse Native API; returned {"status":"OK","data":{"version":"6.1"}}.
+      - url: https://dataspace.hkust.edu.hk/oai?verb=Identify
+        status: 503
+        note: OAI-PMH endpoint present but erroring at review time; not confirmed.
+      - url: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
+        status: 200
+        note: Open Data Platform (Elastic Stack) service page.
+      - url: https://www.ust.hk/
+        status: 200
+        note: Official HKUST website.
+      - url: https://hk.linkedin.com/school/hkust/
+        status: 200
+        note: Official HKUST LinkedIn school page.
+      - url: https://api.ust.hk/hkust-iot
+        status: 0
+        note: HKUST IoT API path referenced publicly but did not resolve (connection failed).

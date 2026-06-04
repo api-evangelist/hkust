@@ -1,0 +1,58 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "hkust": "https://www.ust.hk/ns#",
+    "name": "name",
+    "url": "url",
+    "description": "description",
+    "CollegeOrUniversity": "CollegeOrUniversity",
+    "EducationalOrganization": "EducationalOrganization",
+    "WebAPI": "WebAPI",
+    "documentation": "documentation",
+    "endpointURL": "https://schema.org/EntryPoint",
+    "address": "address",
+    "areaServed": "areaServed",
+    "sameAs": "sameAs",
+    "api": {
+      "@id": "hkust:api",
+      "@container": "@set"
+    }
+  },
+  "@type": "CollegeOrUniversity",
+  "@id": "https://www.ust.hk/",
+  "name": "Hong Kong University of Science and Technology",
+  "url": "https://www.ust.hk/",
+  "description": "Public research university in Clear Water Bay, Hong Kong SAR, operating an Azure API Management developer portal, an Open Data Platform on the Elastic Stack, and DataSpace@HKUST, a Dataverse research data repository.",
+  "areaServed": "Hong Kong SAR",
+  "sameAs": [
+    "https://hk.linkedin.com/school/hkust/",
+    "https://en.wikipedia.org/wiki/Hong_Kong_University_of_Science_and_Technology"
+  ],
+  "api": [
+    {
+      "@type": "WebAPI",
+      "@id": "hkust:api/developer-portal",
+      "name": "HKUST API Portal & Gateway",
+      "url": "https://hkust.developer.azure-api.net/",
+      "documentation": "https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal",
+      "description": "Centralized HKUST API platform on Azure API Management, run by the IT Services Office."
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "hkust:api/dataspace",
+      "name": "DataSpace@HKUST Research Data Repository API",
+      "url": "https://dataspace.hkust.edu.hk/",
+      "endpointURL": "https://dataspace.hkust.edu.hk/api",
+      "documentation": "https://guides.dataverse.org/en/latest/api/native-api.html",
+      "description": "Dataverse 6.1 Native REST API for searching and retrieving dataverses, datasets, and data files with DOI persistent identifiers."
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "hkust:api/open-data-platform",
+      "name": "HKUST Open Data Platform",
+      "url": "https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform",
+      "documentation": "https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform",
+      "description": "Secure central smart-campus data repository built on the Elastic Stack; access via the campus data access process."
+    }
+  ]
+}

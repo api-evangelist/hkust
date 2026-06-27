@@ -43,7 +43,7 @@ apis:
     properties:
       - type: Documentation
         url: https://hkust.developer.azure-api.net/
-      - type: SignUp
+      - type: Signup
         url: https://hkust.developer.azure-api.net/signup
       - type: DeveloperPortal
         url: https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal

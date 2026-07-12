@@ -77,6 +77,8 @@ apis:
       - type: Documentation
         url: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
 common:
+  - type: DomainSecurity
+    url: security/hkust-domain-security.yml
   - type: Website
     url: https://www.ust.hk/
   - type: DeveloperPortal

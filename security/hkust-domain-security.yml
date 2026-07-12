@@ -1,0 +1,30 @@
+generated: '2026-07-11'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.ust.hk
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Dec 13 23:59:59 2026 GMT
+  hsts: false
+- host: hkust.developer.azure-api.net
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov 12 02:04:04 2026 GMT
+  hsts: true
+  hsts_max_age: 31536000
+- host: api.ust.hk
+  https: false
+domains:
+- domain: ust.hk
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: none
+- domain: azure-api.net
+  dnssec: false
+  caa:
+  - 0 contactemail "caarecordaware@microsoft.com"
+  spf: false
+  dmarc: false

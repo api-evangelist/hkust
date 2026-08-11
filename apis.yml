@@ -89,6 +89,16 @@ apis:
       - type: Documentation
         url: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
 common:
+  - type: IssueTracker
+    url: https://github.com/IQSS/dataverse/issues
+  - type: Releases
+    url: https://github.com/IQSS/dataverse/releases
+  - type: SecurityPolicy
+    url: https://github.com/IQSS/dataverse/blob/develop/.github/SECURITY.md
+  - type: CodeOfConduct
+    url: https://github.com/IQSS/dataverse/blob/develop/CODE_OF_CONDUCT.md
+  - type: ContributionGuide
+    url: https://github.com/IQSS/dataverse/blob/develop/CONTRIBUTING.md
   - type: DomainSecurity
     url: security/hkust-domain-security.yml
   - type: Website

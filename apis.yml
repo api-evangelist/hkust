@@ -42,11 +42,12 @@ accessModel:
   label: Free — one keyless public API, everything else gated on HKUST affiliation
   confidence: high
   source:
+    - {url: 'https://www.ust.hk/', status: 301, note: 'declared website redirects to https://hkust.edu.hk/ — a different registrable domain (ust.hk -> hkust.edu.hk), possible rename or acquisition (probed 2026-09-03, roadmap#169)'}
     - probed
     - plans
   generated: '2026-08-30'
   method: probed
-position: Consumer
+position: Consuming
 access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/hkust.png
 url: https://raw.githubusercontent.com/api-evangelist/hkust/refs/heads/main/apis.yml

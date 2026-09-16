@@ -110,141 +110,212 @@ x-coverage:
     - url: https://api.ust.hk/
       status: 0
 apis:
-  - aid: hkust:path-advisor
-    name: HKUST Path Advisor API
-    x-operator: institution
-    description: >-
-      Public, keyless JSON API behind HKUST Path Advisor, the university's campus wayfinding
-      service. Serves the campus spatial model: 7 buildings, 43 calibrated floor plans with
-      metres-per-pixel and origin offsets, 26 point-of-interest categories, and named nodes
-      carrying GeoJSON MultiPolygon footprints. Runs on HKUST's own domain and network
-      (pathadvisor.ust.hk, 143.89.15.35), names no vendor anywhere in its responses or
-      headers, and answers unauthenticated with Access-Control-Allow-Origin *. One route,
-      /connectors, is gated behind an unpublished authorization scheme. HKUST publishes no
-      OpenAPI for it; the description in this repository was written from live probes on
-      2026-08-30 and is a third-party observation, not an HKUST artifact.
-    humanURL: https://pathadvisor.ust.hk/
-    baseURL: https://pathadvisor.ust.hk/api
-    tags: [ Wayfinding, Campus, Geospatial, Open Data, Smart Campus ]
-    properties:
-      - type: OpenAPI
-        url: openapi/hkust-path-advisor-openapi.yml
-      - type: JSONSchema
-        url: json-schema/hkust-path-advisor-node.json
-      - type: Examples
-        url: examples/hkust-path-advisor-examples.yml
-      - type: Errors
-        url: errors/hkust-path-advisor-errors.yml
-      - type: Rules
-        url: rules/hkust-path-advisor-rules.yml
-  - aid: hkust:api-gateway
-    name: HKUST API Gateway and API Portal
-    x-operator: tenant
-    description: >-
-      HKUST's Azure API Management tenant, operated by the IT Services Office. The gateway is
-      live and callable at hkust.azure-api.net and returns the Azure APIM 401 "missing
-      subscription key" on the two products HKUST documents publicly — sensor-data and
-      sensor-inventory, the IoT feeds from the Open Data Platform. Access requires an ITSO
-      account, a Product subscription request, and approval by email; keys travel in the
-      X-Apim-Subscription-Key header. The developer portal is the stock Azure APIM portal and
-      lists nothing to an anonymous visitor. Recorded as tenant: HKUST chose and configures
-      the platform, but hkust.azure-api.net is a subdomain of Microsoft's azure-api.net and
-      the gateway contract is Azure API Management's. The previously catalogued base URL
-      https://api.ust.hk is NXDOMAIN on HKUST's own nameservers and has been removed.
-    humanURL: https://hkust.developer.azure-api.net/
-    baseURL: https://hkust.azure-api.net
-    tags: [ API Gateway, Azure API Management, Developer Portal, Campus, IoT ]
-    properties:
-      - type: DeveloperPortal
-        url: https://hkust.developer.azure-api.net/
-      - type: Signup
-        url: https://hkust.developer.azure-api.net/signup
-      - type: Documentation
-        url: https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal
-      - type: APIReference
-        url: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform/retrieve-iot-data-api
-      - type: Authentication
-        url: authentication/hkust-authentication.yml
-  - aid: hkust:dataspace
-    name: DataSpace@HKUST Research Data Repository API
-    x-operator: institution
-    description: >-
-      The institutional research data repository, running Dataverse 6.1 on Payara. HKUST
-      self-hosts it: dataspace.hkust.edu.hk is on the university's own registrable domain and
-      CNAMEs to lbnx99.ust.hk on HKUST's own network, so the deployment and its operation are
-      genuinely HKUST's. The API contract is not — it is the upstream Dataverse Native REST
-      API, and this repository deliberately does NOT republish Dataverse's generic
-      specification under HKUST's name. Unauthenticated reads work: /api/info/version and
-      /api/search answer without credentials across 151 published datasets, with DOIs under
-      HKUST Library's own Crossref prefix 10.14711. The OAI-PMH provider Dataverse ships is
-      switched off and returns 503 "OAI Service is disabled on this Dataverse".
-    humanURL: https://dataspace.hkust.edu.hk/
-    baseURL: https://dataspace.hkust.edu.hk/api
-    tags: [ Research Data, Repository, Dataverse, Open Data, DOI ]
-    properties:
-      - type: Documentation
-        url: https://guides.dataverse.org/en/latest/api/native-api.html
-      - type: Conformance
-        url: conformance/hkust-conformance.yml
-  - aid: hkust:identity-federation
-    name: HKUST Shibboleth Identity Provider
-    x-operator: institution
-    description: >-
-      HKUST's own SAML 2.0 identity provider, serving machine-readable metadata at
-      idp.ust.hk/idp/shibboleth. Asserts the scopes ust.hk, connect.ust.hk and alumni.ust.hk,
-      and declares HTTP-POST, HTTP-POST-SimpleSign, HTTP-Redirect and SOAP/ECP single-sign-on
-      bindings alongside the legacy Shibboleth 1.0 profile. Registered by the Hong Kong Access
-      Federation on 2017-01-07 and published into eduGAIN carrying the REFEDS Research &
-      Scholarship entity category and the SIRTFI security-incident-response framework, with a
-      security contact of security@ust.hk. This is institution-operated by definition and is
-      the most substantial machine-readable surface HKUST runs — and it is not a developer API,
-      which is the characteristic shape of a university's real programmable footprint.
-    humanURL: https://www.hkaf.edu.hk/
-    baseURL: https://idp.ust.hk/idp/shibboleth
-    tags: [ Identity Federation, SAML, Shibboleth, eduGAIN, Single Sign-On ]
-    properties:
-      - type: Metadata
-        url: https://idp.ust.hk/idp/shibboleth
-      - type: Documentation
-        url: https://technical.edugain.org/api.php?action=show_entity&entityid=https://idp.ust.hk/idp/shibboleth
-      - type: Authentication
-        url: authentication/hkust-authentication.yml
-  - aid: hkust:crossref-doi
-    name: HKUST Library Crossref DOI Registration
-    x-operator: tenant
-    description: >-
-      HKUST Library is Crossref member 5801 and owns DOI prefix 10.14711, under which 14,453
-      records are registered and retrievable through the Crossref REST API — including the
-      dataset DOIs minted by DataSpace@HKUST and the library's own special-collections
-      material. The registration, the prefix and the deposited metadata are HKUST Library's;
-      the API serving them is Crossref's, which is why this is recorded as a tenant
-      relationship and no Crossref specification is saved under HKUST's name. Worth noting
-      that this is a Crossref rather than a DataCite registration, which is unusual for an
-      institutional research-data repository.
-    humanURL: https://library.hkust.edu.hk/
-    baseURL: https://api.crossref.org/prefixes/10.14711
-    tags: [ Library, Scholarly Metadata, DOI, Crossref, Research ]
-    properties:
-      - type: Documentation
-        url: https://api.crossref.org/prefixes/10.14711
-      - type: Conformance
-        url: conformance/hkust-conformance.yml
-  - aid: hkust:open-data-platform
-    name: HKUST Open Data Platform
-    x-operator: institution
-    description: >-
-      Central Elastic Stack repository established by ITSO to collect, search and visualise
-      smart-campus data, including the IoT sensor inventory and sensor readings. It is
-      institution-operated, but there is no open self-service endpoint: the data is reached
-      only through the HKUST API Gateway with a subscription key issued after review, and no
-      separate public API reference is published beyond the IoT retrieval walkthrough.
-    humanURL: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
-    tags: [ Open Data, Smart Campus, Elastic Stack, IoT, Analytics ]
-    properties:
-      - type: Documentation
-        url: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
-      - type: APIReference
-        url: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform/retrieve-iot-data-api
+- aid: hkust:api-gateway
+  name: HKUST API Gateway and API Portal
+  x-operator: tenant
+  description: >-
+    HKUST's Azure API Management tenant, operated by the IT Services Office. The gateway is live and callable
+    at hkust.azure-api.net and returns the Azure APIM 401 "missing subscription key" on the two products
+    HKUST documents publicly — sensor-data and sensor-inventory, the IoT feeds from the Open Data Platform.
+    Access requires an ITSO account, a Product subscription request, and approval by email; keys travel
+    in the X-Apim-Subscription-Key header. The developer portal is the stock Azure APIM portal and lists
+    nothing to an anonymous visitor. Recorded as tenant: HKUST chose and configures the platform, but
+    hkust.azure-api.net is a subdomain of Microsoft's azure-api.net and the gateway contract is Azure
+    API Management's. The previously catalogued base URL https://api.ust.hk is NXDOMAIN on HKUST's own
+    nameservers and has been removed.
+  humanURL: https://hkust.developer.azure-api.net/
+  baseURL: https://hkust.azure-api.net
+  tags:
+  - API Gateway
+  - Azure API Management
+  - Developer Portal
+  - Campus
+  - IoT
+  properties:
+  - type: DeveloperPortal
+    url: https://hkust.developer.azure-api.net/
+  - type: Signup
+    url: https://hkust.developer.azure-api.net/signup
+  - type: Documentation
+    url: https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal
+  - type: APIReference
+    url: >-
+      https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform/retrieve-iot-data-api
+  - type: Authentication
+    url: authentication/hkust-authentication.yml
+- aid: hkust:dataspace
+  name: DataSpace@HKUST Research Data Repository API
+  x-operator: institution
+  description: >-
+    The institutional research data repository, running Dataverse 6.1 on Payara. HKUST self-hosts it:
+    dataspace.hkust.edu.hk is on the university's own registrable domain and CNAMEs to lbnx99.ust.hk on
+    HKUST's own network, so the deployment and its operation are genuinely HKUST's. The API contract is
+    not — it is the upstream Dataverse Native REST API, and this repository deliberately does NOT republish
+    Dataverse's generic specification under HKUST's name. Unauthenticated reads work: /api/info/version
+    and /api/search answer without credentials across 151 published datasets, with DOIs under HKUST Library's
+    own Crossref prefix 10.14711. The OAI-PMH provider Dataverse ships is switched off and returns 503
+    "OAI Service is disabled on this Dataverse".
+  humanURL: https://dataspace.hkust.edu.hk/
+  baseURL: https://dataspace.hkust.edu.hk/api
+  tags:
+  - Research Data
+  - Repository
+  - Dataverse
+  - Open Data
+  - DOI
+  properties:
+  - type: Documentation
+    url: https://guides.dataverse.org/en/latest/api/native-api.html
+  - type: Conformance
+    url: conformance/hkust-conformance.yml
+- aid: hkust:identity-federation
+  name: HKUST Shibboleth Identity Provider
+  x-operator: institution
+  description: >-
+    HKUST's own SAML 2.0 identity provider, serving machine-readable metadata at idp.ust.hk/idp/shibboleth.
+    Asserts the scopes ust.hk, connect.ust.hk and alumni.ust.hk, and declares HTTP-POST, HTTP-POST-SimpleSign,
+    HTTP-Redirect and SOAP/ECP single-sign-on bindings alongside the legacy Shibboleth 1.0 profile. Registered
+    by the Hong Kong Access Federation on 2017-01-07 and published into eduGAIN carrying the REFEDS Research
+    & Scholarship entity category and the SIRTFI security-incident-response framework, with a security
+    contact of security@ust.hk. This is institution-operated by definition and is the most substantial
+    machine-readable surface HKUST runs — and it is not a developer API, which is the characteristic shape
+    of a university's real programmable footprint.
+  humanURL: https://www.hkaf.edu.hk/
+  baseURL: https://idp.ust.hk/idp/shibboleth
+  tags:
+  - Identity Federation
+  - SAML
+  - Shibboleth
+  - eduGAIN
+  - Single Sign-On
+  properties:
+  - type: Metadata
+    url: https://idp.ust.hk/idp/shibboleth
+  - type: Documentation
+    url: >-
+      https://technical.edugain.org/api.php?action=show_entity&entityid=https://idp.ust.hk/idp/shibboleth
+  - type: Authentication
+    url: authentication/hkust-authentication.yml
+- aid: hkust:crossref-doi
+  name: HKUST Library Crossref DOI Registration
+  x-operator: tenant
+  description: >-
+    HKUST Library is Crossref member 5801 and owns DOI prefix 10.14711, under which 14,453 records are
+    registered and retrievable through the Crossref REST API — including the dataset DOIs minted by DataSpace@HKUST
+    and the library's own special-collections material. The registration, the prefix and the deposited
+    metadata are HKUST Library's; the API serving them is Crossref's, which is why this is recorded as
+    a tenant relationship and no Crossref specification is saved under HKUST's name. Worth noting that
+    this is a Crossref rather than a DataCite registration, which is unusual for an institutional research-data
+    repository.
+  humanURL: https://library.hkust.edu.hk/
+  baseURL: https://api.crossref.org/prefixes/10.14711
+  tags:
+  - Library
+  - Scholarly Metadata
+  - DOI
+  - Crossref
+  - Research
+  properties:
+  - type: Documentation
+    url: https://api.crossref.org/prefixes/10.14711
+  - type: Conformance
+    url: conformance/hkust-conformance.yml
+- aid: hkust:open-data-platform
+  name: HKUST Open Data Platform
+  x-operator: institution
+  description: >-
+    Central Elastic Stack repository established by ITSO to collect, search and visualise smart-campus
+    data, including the IoT sensor inventory and sensor readings. It is institution-operated, but there
+    is no open self-service endpoint: the data is reached only through the HKUST API Gateway with a subscription
+    key issued after review, and no separate public API reference is published beyond the IoT retrieval
+    walkthrough.
+  humanURL: >-
+    https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
+  tags:
+  - Open Data
+  - Smart Campus
+  - Elastic Stack
+  - IoT
+  - Analytics
+  properties:
+  - type: Documentation
+    url: >-
+      https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
+  - type: APIReference
+    url: >-
+      https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform/retrieve-iot-data-api
+- aid: hkust:hkust-buildings-api
+  name: Hong Kong University of Science and Technology Buildings API
+  description: Campus buildings.
+  humanURL: https://pathadvisor.ust.hk/
+  baseURL: https://pathadvisor.ust.hk/api
+  tags:
+  - Buildings
+  properties:
+  - type: OpenAPI
+    url: openapi/hkust-buildings-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/hkust-path-advisor-node.json
+  - type: Examples
+    url: examples/hkust-path-advisor-examples.yml
+  - type: Errors
+    url: errors/hkust-path-advisor-errors.yml
+  - type: Rules
+    url: rules/hkust-path-advisor-rules.yml
+- aid: hkust:hkust-floors-api
+  name: Hong Kong University of Science and Technology Floors API
+  description: Floor plans and their map calibration.
+  humanURL: https://pathadvisor.ust.hk/
+  baseURL: https://pathadvisor.ust.hk/api
+  tags:
+  - Floors
+  properties:
+  - type: OpenAPI
+    url: openapi/hkust-floors-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/hkust-path-advisor-node.json
+  - type: Examples
+    url: examples/hkust-path-advisor-examples.yml
+  - type: Errors
+    url: errors/hkust-path-advisor-errors.yml
+  - type: Rules
+    url: rules/hkust-path-advisor-rules.yml
+- aid: hkust:hkust-nodes-api
+  name: Hong Kong University of Science and Technology Nodes API
+  description: Named map features with GeoJSON footprints.
+  humanURL: https://pathadvisor.ust.hk/
+  baseURL: https://pathadvisor.ust.hk/api
+  tags:
+  - Nodes
+  properties:
+  - type: OpenAPI
+    url: openapi/hkust-nodes-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/hkust-path-advisor-node.json
+  - type: Examples
+    url: examples/hkust-path-advisor-examples.yml
+  - type: Errors
+    url: errors/hkust-path-advisor-errors.yml
+  - type: Rules
+    url: rules/hkust-path-advisor-rules.yml
+- aid: hkust:hkust-tags-api
+  name: Hong Kong University of Science and Technology Tags API
+  description: Point-of-interest categories.
+  humanURL: https://pathadvisor.ust.hk/
+  baseURL: https://pathadvisor.ust.hk/api
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/hkust-tags-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/hkust-path-advisor-node.json
+  - type: Examples
+    url: examples/hkust-path-advisor-examples.yml
+  - type: Errors
+    url: errors/hkust-path-advisor-errors.yml
+  - type: Rules
+    url: rules/hkust-path-advisor-rules.yml
 common:
   - type: Website
     url: https://www.ust.hk/

@@ -187,6 +187,12 @@ apis:
   - SAML
   - Shibboleth
   - eduGAIN
+  - SSO
+  tags_raw:
+  - Identity Federation
+  - SAML
+  - Shibboleth
+  - eduGAIN
   - Single Sign-On
   properties:
   - type: Metadata
@@ -286,6 +292,8 @@ apis:
   humanURL: https://pathadvisor.ust.hk/
   baseURL: https://pathadvisor.ust.hk/api
   tags:
+  - Node
+  tags_raw:
   - Nodes
   properties:
   - type: OpenAPI

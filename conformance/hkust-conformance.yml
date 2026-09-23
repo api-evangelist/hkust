@@ -1,0 +1,136 @@
+name: Hong Kong University of Science and Technology — education-regime standard conformance
+provider: Hong Kong University of Science and Technology
+providerId: hkust
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes on 2026-08-30 against HKUST hosts and against the third-party registries that
+  can corroborate an institutional registration (eduGAIN technical API, Crossref REST API,
+  DOI registration-agency lookup). Reward-only: every hit below points at an exact location
+  that was fetched and returned the stated status. Misses are recorded as misses.
+regime: education
+standards:
+  - standard: shibboleth
+    conformant: true
+    x-operator: institution
+    detail: >-
+      HKUST operates its own Shibboleth Identity Provider and serves machine-readable SAML
+      metadata for it. The metadata declares IDPSSODescriptor support for the Shibboleth 1.0
+      profile alongside SAML 2.0, and a shibmd:Scope of ust.hk (plus connect.ust.hk and
+      alumni.ust.hk in the federation copy).
+    evidence:
+      - url: https://idp.ust.hk/idp/shibboleth
+        status: 200
+        contentType: application/xml
+        locator: 'EntityDescriptor/@entityID = "https://idp.ust.hk/idp/shibboleth"; IDPSSODescriptor/@protocolSupportEnumeration contains "urn:mace:shibboleth:1.0"'
+    caveat: >-
+      The file served at /idp/shibboleth is the stock Shibboleth-generated metadata and still
+      carries the software's "This is example metadata only" header comment and unfilled
+      mdui:UIInfo placeholders. The entityID, scope, endpoints and signing certificates in it
+      are genuinely HKUST's; the curated copy is the one published through the federation.
+  - standard: saml
+    conformant: true
+    x-operator: institution
+    detail: >-
+      SAML 2.0 Identity Provider, registered by the Hong Kong Access Federation
+      (registrationAuthority https://hkaf.edu.hk, registrationInstant 2017-01-07) and
+      published into eduGAIN. Carries the REFEDS Research & Scholarship entity category and
+      the SIRTFI security-incident-response assurance framework. Declares HTTP-POST,
+      HTTP-POST-SimpleSign, HTTP-Redirect and SOAP/ECP SingleSignOnService bindings, an
+      OrganizationDisplayName of "The Hong Kong University of Science and Technology", and a
+      security contact of security@ust.hk.
+    evidence:
+      - url: https://technical.edugain.org/api.php?action=show_entity&entityid=https://idp.ust.hk/idp/shibboleth
+        status: 200
+        locator: 'mdrpi:RegistrationInfo/@registrationAuthority = "https://hkaf.edu.hk"; mdattr:EntityAttributes contains http://refeds.org/category/research-and-scholarship and https://refeds.org/sirtfi'
+      - url: https://idp.ust.hk/idp/profile/SAML2/POST/SSO
+        status: 200
+        note: Declared SingleSignOnService location, present in metadata.
+  - standard: crossref
+    conformant: true
+    x-operator: tenant
+    detail: >-
+      HKUST Library is a Crossref member (member 5801) and owns DOI prefix 10.14711, under
+      which 14,453 records are registered and retrievable through the Crossref REST API.
+      DataSpace@HKUST dataset DOIs resolve through this prefix. The registration and the
+      deposited metadata are HKUST Library's; the API serving them is Crossref's, which is
+      why this is recorded as a tenant relationship rather than an HKUST-operated API.
+    evidence:
+      - url: https://api.crossref.org/prefixes/10.14711
+        status: 200
+        locator: 'message.name = "The Hong Kong University of Science and Technology Library"; message.member = https://id.crossref.org/member/5801'
+      - url: https://api.crossref.org/prefixes/10.14711/works?rows=1
+        status: 200
+        locator: 'message.total-results = 14453'
+      - url: https://doi.org/doiRA/10.14711/dataset/AZ23VH
+        status: 200
+        locator: '[{"DOI":"10.14711/dataset/AZ23VH","RA":"Crossref"}]'
+  - standard: oai-pmh
+    conformant: false
+    detail: >-
+      DataSpace@HKUST runs Dataverse 6.1, which ships an OAI-PMH provider, but HKUST has it
+      switched OFF. The endpoint exists and answers, and what it answers is an explicit
+      refusal — this is a confirmed negative, not an unreached endpoint. The 2026-06-03
+      review recorded the same 503 and left it "not confirmed"; it is now confirmed.
+    evidence:
+      - url: https://dataspace.hkust.edu.hk/oai?verb=Identify
+        status: 503
+        locator: 'HTTP Status 503 - "Sorry. OAI Service is disabled on this Dataverse"'
+      - url: https://dataspace.hkust.edu.hk/oai?verb=ListMetadataFormats
+        status: 503
+      - url: https://repository.hkust.edu.hk/ir/oai/request?verb=Identify
+        status: 302
+        locator: Redirects to a Cap.js proof-of-work captcha; not reachable by a machine client.
+  - standard: datacite
+    conformant: false
+    detail: >-
+      Checked and negative. HKUST's DOI prefix 10.14711 is registered with Crossref, not
+      DataCite — unusual for an institutional research-data repository, most of which mint
+      dataset DOIs through DataCite. A DataCite query for the prefix returns zero records.
+    evidence:
+      - url: https://api.datacite.org/dois?query=prefix:10.14711&page[size]=1
+        status: 200
+        locator: 'meta.total = 0'
+  - standard: orcid
+    conformant: false
+    detail: >-
+      Not confirmed. 12,529 ORCID records name HKUST as an affiliation organization, but
+      that is researchers self-asserting an affiliation, not an institution-operated ORCID
+      integration. No HKUST-operated ORCID member API, Trusted Organization connection, or
+      published ORCID service page was found. Recorded as unmet rather than credited.
+    evidence:
+      - url: https://pub.orcid.org/v3.0/expanded-search/?q=affiliation-org-name:%22Hong%20Kong%20University%20of%20Science%20and%20Technology%22&rows=1
+        status: 200
+        locator: 'num-found = 12529 — self-asserted affiliations only'
+  - standard: scim
+    conformant: false
+    detail: No SCIM provisioning endpoint published or discoverable on any HKUST host probed.
+  - standard: lti
+    conformant: false
+    detail: >-
+      HKUST runs Canvas as its LMS and the Canvas API appears in the HKUST API Portal
+      catalog, but LTI conformance belongs to Instructure's product, not to HKUST, and no
+      HKUST-operated LTI platform or tool registration is published.
+  - standard: oneroster
+    conformant: false
+    detail: Not found. No OneRoster endpoint published.
+  - standard: ed-fi
+    conformant: false
+    detail: Not found. Ed-Fi is a US K-12 standard and is not expected here.
+  - standard: caliper
+    conformant: false
+    detail: Not found. No Caliper learning-analytics endpoint published.
+  - standard: qti
+    conformant: false
+    detail: Not found. No QTI assessment interoperability surface published.
+summary:
+  met: 3
+  unmet: 9
+  note: >-
+    The three hits are all identity and scholarly-infrastructure registrations, which is the
+    characteristic shape for a research university: HKUST's genuinely machine-readable,
+    genuinely institution-operated surfaces are its SAML identity provider and its Crossref
+    DOI registration, not a developer API.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

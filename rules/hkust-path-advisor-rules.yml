@@ -1,0 +1,69 @@
+name: HKUST Path Advisor API — client rules
+provider: Hong Kong University of Science and Technology
+providerId: hkust
+generated: '2026-08-30'
+method: derived
+source: >-
+  Derived from openapi/_original/hkust-path-advisor-openapi.yml and from response behaviour
+  observed live on 2026-08-30. These are rules for CONSUMING the API safely given what it
+  does and does not guarantee. HKUST publishes no client guidance of its own.
+x-operator: institution
+rules:
+  - id: name-is-required-on-nodes
+    severity: error
+    rule: >-
+      Always send a non-empty `name` on GET /nodes. Every observed request without it — even
+      one supplying floorId — returned 400 "Empty query is not allowed". There is no
+      list-all-nodes route.
+  - id: never-infer-existence-from-400
+    severity: error
+    rule: >-
+      Do not treat a 400 "Bad request" as evidence that a route exists but was called wrong.
+      This API returns the identical 400 body for unknown routes, so 400 is ambiguous. Only a
+      200 or a distinguishing message ("Empty query is not allowed", "Authorization failed")
+      proves a route is real.
+  - id: coordinates-are-pixels-not-degrees
+    severity: error
+    rule: >-
+      geoLocs is GeoJSON-SHAPED but its coordinates are floor-plan pixels, not WGS84
+      longitude/latitude. Feeding these straight into a geospatial library that assumes
+      degrees will silently produce nonsense. Convert using the owning Floor's meterPerPixel,
+      startX and startY.
+  - id: resolve-floor-before-rendering-a-node
+    severity: warning
+    rule: >-
+      A Node is meaningless without its Floor — the floor carries the origin offset, scale
+      and image dimensions its coordinates are relative to. Fetch GET /floors/{floorId}
+      before plotting.
+  - id: cache-reference-collections
+    severity: warning
+    rule: >-
+      /buildings (7 items), /floors (43 items) and /tags (26 items) are small, slow-changing
+      reference collections and are served with a weak ETag. Cache them and revalidate with
+      If-None-Match rather than refetching per user action.
+  - id: no-published-rate-limit-so-self-throttle
+    severity: warning
+    rule: >-
+      No rate-limit headers, no 429 observed, and no published limit. Absence of a stated
+      limit is not permission for volume — this is a campus service on university
+      infrastructure. Keep request rates modest and back off on any 5xx.
+  - id: do-not-depend-on-error-message-strings
+    severity: warning
+    rule: >-
+      The only signal in an error is a free-text English message. It is not published, not
+      versioned, and not stable. Branch on HTTP status; log the message, do not parse it.
+  - id: treat-connectors-as-unavailable
+    severity: info
+    rule: >-
+      GET /connectors returns 401 with no WWW-Authenticate header and no published enrollment
+      path. Design around it rather than for it; connectorId on a Node is enough to group
+      vertical circulation without it.
+  - id: unversioned-contract
+    severity: warning
+    rule: >-
+      There is no version segment in the path, no version header, and no changelog. Any field
+      you depend on can change without notice. Validate responses against
+      json-schema/ and fail loudly rather than silently.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

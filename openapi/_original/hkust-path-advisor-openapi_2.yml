@@ -1,0 +1,433 @@
+# x-archived-from: hkust-path-advisor-openapi.yml
+# x-archived-on: 2026-09-16
+openapi: 3.0.3
+info:
+  title: HKUST Path Advisor API
+  version: '1.0'
+  description: >-
+    Public, keyless JSON API behind HKUST Path Advisor, the university's indoor/outdoor
+    campus wayfinding service at https://pathadvisor.ust.hk. It serves the campus spatial
+    model — buildings, floor plans with their pixel/metre calibration, point-of-interest
+    categories, and named nodes with GeoJSON MultiPolygon footprints.
+
+    OPERATOR: institution. The host pathadvisor.ust.hk is under HKUST's own registrable
+    domain ust.hk and resolves inside HKUST's own network (143.89.15.35). No vendor is
+    named anywhere in the service's responses or headers.
+
+    PROVENANCE: HKUST publishes no OpenAPI for this API. This description was written by
+    API Evangelist from live unauthenticated HTTP probes on 2026-08-30 and describes ONLY
+    request shapes and response fields that were actually observed. It is a third-party
+    observation, not an HKUST artifact, and HKUST makes no compatibility commitment about it.
+  contact:
+    name: HKUST Information Technology Services Office
+    url: https://itso.hkust.edu.hk/
+  x-operator: institution
+  x-artifact-provenance:
+    generated: '2026-08-30'
+    method: probed
+    source: >-
+      Live unauthenticated GET probes against https://pathadvisor.ust.hk/api on 2026-08-30.
+      Endpoints confirmed by a 200 or a distinguishing non-generic error; the service returns
+      a generic 400 {"error":{"message":"Bad request"}} for unknown routes, so only 200 and
+      401 responses were treated as proof a route exists.
+servers:
+  - url: https://pathadvisor.ust.hk/api
+    description: Production. CORS Access-Control-Allow-Origin *; HSTS; nginx. No API key required.
+tags:
+  - name: Buildings
+    description: Campus buildings.
+  - name: Floors
+    description: Floor plans and their map calibration.
+  - name: Nodes
+    description: Named map features with GeoJSON footprints.
+  - name: Tags
+    description: Point-of-interest categories.
+paths:
+  /buildings:
+    get:
+      tags: [Buildings]
+      operationId: listBuildings
+      summary: List campus buildings
+      description: >-
+        Returns every building in the campus model. Observed to return the full list
+        regardless of query parameters; no filtering parameter was found to take effect.
+      responses:
+        '200':
+          description: Building list.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Building'
+              example:
+                data:
+                  - _id: academicBuilding
+                    name: Academic Building
+                  - _id: cyt
+                    name: CYT
+  /floors:
+    get:
+      tags: [Floors]
+      operationId: listFloors
+      summary: List floor plans
+      description: >-
+        Returns every floor plan in the campus model, each carrying the calibration a client
+        needs to render it — pixel dimensions, metres-per-pixel, and default viewport.
+        Observed to return the full list regardless of query parameters.
+      responses:
+        '200':
+          description: Floor list.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Floor'
+  /floors/{floorId}:
+    get:
+      tags: [Floors]
+      operationId: getFloor
+      summary: Get one floor plan
+      parameters:
+        - name: floorId
+          in: path
+          required: true
+          description: Floor identifier as returned in Floor._id, e.g. "1" or "LSK3".
+          schema:
+            type: string
+          example: '1'
+      responses:
+        '200':
+          description: Floor plan.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Floor'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /tags:
+    get:
+      tags: [Tags]
+      operationId: listTags
+      summary: List point-of-interest categories
+      description: >-
+        Returns the categories Path Advisor uses to classify campus features — accessible
+        toilet, guest accommodation, lift, and so on — each with the URL of its map icon.
+      responses:
+        '200':
+          description: Tag list.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tag'
+              example:
+                data:
+                  - _id: accessibleToilet
+                    name: Accessible Toilet
+                    imageUrl: https://pathadvisor.ust.hk/api/tags/accessibleToilet.png
+  /nodes:
+    get:
+      tags: [Nodes]
+      operationId: searchNodes
+      summary: Search map nodes by name
+      description: >-
+        Searches named campus features. The `name` parameter is REQUIRED — every observed
+        request without it returned 400 with the distinguishing message
+        "Empty query is not allowed", including requests that supplied only floorId.
+        Matching is substring and case-insensitive against the node name.
+      parameters:
+        - name: name
+          in: query
+          required: true
+          description: Substring matched against the node name. Required.
+          schema:
+            type: string
+          example: lift
+        - name: floorId
+          in: query
+          required: false
+          description: Observed accepted alongside `name`; narrows results to one floor.
+          schema:
+            type: string
+          example: '1'
+        - name: limit
+          in: query
+          required: false
+          description: Observed accepted; caps the number of returned nodes.
+          schema:
+            type: integer
+            minimum: 1
+          example: 2
+        - name: sortBy
+          in: query
+          required: false
+          description: Observed accepted without error. Ordering effect not verified.
+          schema:
+            type: string
+          example: name
+      responses:
+        '200':
+          description: Matching nodes.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Node'
+        '400':
+          description: The required `name` query parameter was absent.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  message: Empty query is not allowed
+  /nodes/{nodeId}:
+    get:
+      tags: [Nodes]
+      operationId: getNode
+      summary: Get one map node
+      parameters:
+        - name: nodeId
+          in: path
+          required: true
+          description: Node identifier as returned in Node._id.
+          schema:
+            type: string
+          example: 0W9Lglf39vxh
+      responses:
+        '200':
+          description: Node.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Node'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /connectors:
+    get:
+      tags: [Nodes]
+      operationId: listConnectors
+      summary: List floor connectors (authorization required)
+      description: >-
+        Vertical circulation between floors — lifts, stairs, escalators. Unlike every other
+        route observed on this API, this one is gated: an unauthenticated request returns 401
+        {"error":{"message":"Authorization failed"}}. HKUST publishes no documentation for how
+        that authorization is obtained, so the scheme is recorded as observed-but-unspecified
+        and is deliberately NOT guessed at here.
+      responses:
+        '200':
+          description: Connector list. Shape not observed — the route is gated.
+        '401':
+          description: Unauthenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  message: Authorization failed
+components:
+  responses:
+    BadRequest:
+      description: >-
+        Generic rejection. This API returns the same 400 body for a malformed request and for
+        a route that does not exist, so a 400 is not evidence either way.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              message: Bad request
+  schemas:
+    Building:
+      type: object
+      description: A campus building.
+      required: [_id, name]
+      properties:
+        _id:
+          type: string
+          description: Building identifier, used as Floor.buildingId.
+          example: academicBuilding
+        name:
+          type: string
+          example: Academic Building
+    Floor:
+      type: object
+      description: >-
+        A floor plan plus the calibration needed to render it and convert pixels to metres.
+      required: [_id, name, buildingId]
+      properties:
+        _id:
+          type: string
+          example: '1'
+        name:
+          type: string
+          example: '1'
+        buildingId:
+          type: string
+          description: References Building._id.
+          example: academicBuilding
+        startX:
+          type: integer
+          description: X origin of the floor image in the shared campus coordinate space.
+          example: -1412
+        startY:
+          type: integer
+          description: Y origin of the floor image in the shared campus coordinate space.
+          example: -1386
+        meterPerPixel:
+          type: number
+          description: Real-world metres represented by one map pixel.
+          example: 0.071875
+        mapWidth:
+          type: integer
+          example: 4516
+        mapHeight:
+          type: integer
+          example: 3291
+        ratio:
+          type: number
+          example: 0.1
+        defaultX:
+          type: integer
+          description: Default desktop viewport centre.
+          example: 520
+        defaultY:
+          type: integer
+          example: -160
+        defaultLevel:
+          type: integer
+          description: Default desktop zoom level.
+          example: 3
+        mobileDefaultX:
+          type: integer
+          example: 520
+        mobileDefaultY:
+          type: integer
+          example: -160
+        mobileDefaultLevel:
+          type: integer
+          example: 3
+        rank:
+          type: integer
+          description: Ordering of this floor within its building.
+          example: 1
+    Node:
+      type: object
+      description: >-
+        A named feature on a floor plan, with a point coordinate and a GeoJSON MultiPolygon
+        footprint in the same floor-plan pixel coordinate space.
+      required: [_id, name, floorId]
+      properties:
+        _id:
+          type: string
+          example: 0W9Lglf39vxh
+        name:
+          type: string
+          example: LIFT 1
+        floorId:
+          type: string
+          description: References Floor._id.
+          example: LSK3
+        coordinates:
+          type: array
+          description: '[x, y] anchor point in floor-plan pixel space.'
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
+          example: [11, 18]
+        centerCoordinates:
+          type: array
+          description: '[x, y] centroid of the footprint.'
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
+          example: [22, 11]
+        connectorId:
+          type: string
+          description: >-
+            Present when the node is vertical circulation; groups the same lift or stairwell
+            across floors. Detail is served by the gated /connectors route.
+          example: LIFT LSK1
+        geoLocs:
+          $ref: '#/components/schemas/MultiPolygon'
+    MultiPolygon:
+      type: object
+      description: >-
+        GeoJSON MultiPolygon geometry (RFC 7946 shape). Coordinates are floor-plan pixels,
+        not WGS84 degrees — convert with Floor.meterPerPixel and Floor.startX/startY.
+      required: [type, coordinates]
+      properties:
+        type:
+          type: string
+          enum: [MultiPolygon]
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              type: array
+              items:
+                type: number
+                minItems: 2
+                maxItems: 2
+    Tag:
+      type: object
+      description: A point-of-interest category.
+      required: [_id, name]
+      properties:
+        _id:
+          type: string
+          example: accessibleToilet
+        name:
+          type: string
+          example: Accessible Toilet
+        imageUrl:
+          type: string
+          format: uri
+          description: Map icon for the category.
+          example: https://pathadvisor.ust.hk/api/tags/accessibleToilet.png
+    Error:
+      type: object
+      description: Error envelope used by every failing route observed.
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [message]
+          properties:
+            message:
+              type: string
+              example: Bad request

@@ -4,32 +4,70 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Hong Kong University of Science and Technology
 providerId: hkust
 created: '2026-06-03'
-modified: '2026-06-03'
+modified: '2026-08-30'
+generated: '2026-08-30'
+method: probed
 reconciled: false
 tags:
-- Education
-- Higher Education
-- University
-- Rate Limiting
+  - University
+  - Higher Education
+  - Education
+  - Rate Limiting
 description: >-
-  Hong Kong University of Science and Technology does not publish a unified public rate-limit table across its APIs. Open
-  metadata and harvesting endpoints (OAI-PMH, IIIF, library) may throttle large-scale
-  or automated harvesting; clients should harvest politely, honor Retry-After, and
-  contact the relevant service for bulk access.
-notes: Confirm per-service limits with each API's documentation; harvest responsibly.
+  HKUST publishes no numeric rate limit for any of its API surfaces. It does state a
+  throttling POSTURE for the one surface that has an enforcement point: the ITSO service page
+  says the HKUST API Gateway "will control access to APIs according to pre-defined access
+  frequency, intensity, etc. and prevent overloading", and that protecting the underlying
+  systems of record from application traffic is the reason the gateway exists at all. The
+  thresholds themselves are not published, and the gateway cannot be exercised without an
+  approved subscription key, so they could not be measured.
+notes: >-
+  Corrected 2026-08-30. The previous version of this file described throttling on OAI-PMH and
+  IIIF endpoints; neither exists here. The DataSpace@HKUST OAI-PMH provider is switched off
+  and returns 503, and no IIIF surface was found on any HKUST host.
 sources:
-- https://raw.githubusercontent.com/api-evangelist/hkust/refs/heads/main/apis.yml
+  - https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal
+  - https://pathadvisor.ust.hk/api/floors
 responseCodes:
   throttled: 429
+  observed: none
 limits:
-- name: Default
-  scope: client
-  metric: requests-per-minute
-  limit: see service documentation
-  notes: No published global limit; large harvests may be rate-limited.
+  - name: HKUST API Gateway
+    surface: https://hkust.azure-api.net
+    x-operator: tenant
+    scope: subscription-key
+    metric: unpublished
+    limit: not published
+    notes: >-
+      Azure API Management enforces per-subscription throttling policies. HKUST states that
+      the gateway limits access frequency and intensity but publishes no figures, and the
+      policies are not visible without an approved key.
+  - name: HKUST Path Advisor API
+    surface: https://pathadvisor.ust.hk/api
+    x-operator: institution
+    scope: none
+    metric: none
+    limit: none published
+    notes: >-
+      No rate-limit headers of any kind are returned, and no 429 was observed during probing
+      on 2026-08-30. Absence of a stated limit is not permission for volume: this is a campus
+      service on university infrastructure. Responses do carry a weak ETag, so conditional
+      requests are the correct way to reduce load.
+  - name: DataSpace@HKUST
+    surface: https://dataspace.hkust.edu.hk/api
+    x-operator: institution
+    scope: unpublished
+    metric: unpublished
+    limit: not published
+    notes: >-
+      No rate-limit documentation published by HKUST; upstream Dataverse defaults apply.
 policies:
-- name: Backoff Strategy
-  description: Exponential backoff with jitter; honor Retry-After; harvest during off-peak hours.
+  - name: Backoff Strategy
+    description: Exponential backoff with jitter; honor Retry-After if it ever appears; back off on any 5xx.
+  - name: Conditional Requests
+    description: >-
+      Cache the small reference collections on the Path Advisor API (/buildings, /floors,
+      /tags) and revalidate with If-None-Match against the returned ETag.
 maintainers:
-- FN: Kin Lane
-  email: kin@apievangelist.com
+  - FN: Kin Lane
+    email: kin@apievangelist.com

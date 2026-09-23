@@ -1,0 +1,80 @@
+name: Hong Kong University of Science and Technology — API vocabulary
+provider: Hong Kong University of Science and Technology
+providerId: hkust
+generated: '2026-08-30'
+method: derived
+source: >-
+  Derived from field and identifier names observed in live responses from
+  https://pathadvisor.ust.hk/api on 2026-08-30, and from HKUST's own service pages on
+  itso.hkust.edu.hk. Only terms HKUST actually uses appear here; none are proposed.
+x-operator: institution
+terms:
+  - term: node
+    definition: >-
+      A named feature on a campus floor plan — a room, lift, entrance, or facility — carrying
+      an anchor coordinate and a GeoJSON MultiPolygon footprint.
+    surface: HKUST Path Advisor API
+    observedIn: GET /api/nodes
+  - term: floor
+    definition: >-
+      A single floor plan image plus the calibration that makes it renderable and measurable:
+      pixel dimensions, metres-per-pixel, origin offset, and a default viewport.
+    surface: HKUST Path Advisor API
+    observedIn: GET /api/floors
+  - term: building
+    definition: A named campus building grouping a set of floors.
+    surface: HKUST Path Advisor API
+    observedIn: GET /api/buildings
+  - term: connector
+    definition: >-
+      Vertical circulation joining floors — a lift, stairwell, or escalator. Nodes reference
+      one through connectorId; the connector resource itself is gated.
+    surface: HKUST Path Advisor API
+    observedIn: Node.connectorId, GET /api/connectors (401)
+  - term: tag
+    definition: >-
+      A point-of-interest category used to classify and icon campus features, e.g.
+      accessibleToilet, accommodation.
+    surface: HKUST Path Advisor API
+    observedIn: GET /api/tags
+  - term: meterPerPixel
+    definition: >-
+      The scale factor converting floor-plan pixel coordinates to real-world metres. The key
+      that makes this API a spatial dataset rather than a set of pictures.
+    surface: HKUST Path Advisor API
+    observedIn: Floor.meterPerPixel
+  - term: API Gateway
+    definition: >-
+      HKUST's term for the enforcement point all campus API traffic is channeled through,
+      controlling access by pre-defined access frequency and intensity to protect the
+      underlying systems of record.
+    surface: HKUST API Gateway
+    observedIn: https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal
+  - term: API Portal
+    definition: >-
+      HKUST's term for the centralized catalog where departments publish application APIs
+      for other departments and developers to discover and subscribe to.
+    surface: HKUST API Portal
+    observedIn: https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal
+  - term: Product
+    definition: >-
+      The unit of subscription in the HKUST API Portal, inherited from Azure API Management.
+      A key is approved against a Product, e.g. "IoT Sensor Data" or "Sensor Inventory".
+    surface: HKUST API Gateway
+    observedIn: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform/retrieve-iot-data-api
+  - term: Open Data Platform
+    definition: >-
+      HKUST's term for the central Elastic Stack repository collecting smart-campus data,
+      exposed to approved campus clients through the API Gateway rather than openly.
+    surface: HKUST Open Data Platform
+    observedIn: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
+  - term: dataverse
+    definition: >-
+      A collection container in DataSpace@HKUST. Upstream Dataverse vocabulary, used
+      unmodified by HKUST's deployment.
+    surface: DataSpace@HKUST
+    observedIn: GET /api/search (identifier_of_dataverse, name_of_dataverse)
+    x-vocabulary-origin: Dataverse project (IQSS), not HKUST
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

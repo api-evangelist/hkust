@@ -1,0 +1,158 @@
+openapi: 3.2.0
+info:
+  title: HKUST Path Advisor Floors API
+  version: '1.0'
+  description: Public, keyless JSON API behind HKUST Path Advisor, the university's indoor/outdoor campus wayfinding service at https://pathadvisor.ust.hk.
+  contact:
+    name: HKUST Information Technology Services Office
+    url: https://itso.hkust.edu.hk/
+  x-operator: institution
+  x-artifact-provenance:
+    generated: '2026-08-30'
+    method: probed
+    source: Live unauthenticated GET probes against https://pathadvisor.ust.hk/api on 2026-08-30. Endpoints confirmed by a 200 or a distinguishing non-generic error; the service returns a generic 400 {"error":{"message":"Bad request"}} for unknown routes, so only 200 and 401 responses were treated as proof a route exists.
+servers:
+- url: https://pathadvisor.ust.hk/api
+  description: Production. CORS Access-Control-Allow-Origin *; HSTS; nginx. No API key required.
+tags:
+- name: Floors
+  description: Floor plans and their map calibration.
+paths:
+  /floors:
+    get:
+      tags:
+      - Floors
+      operationId: listFloors
+      summary: List floor plans
+      description: Returns every floor plan in the campus model, each carrying the calibration a client needs to render it — pixel dimensions, metres-per-pixel, and default viewport. Observed to return the full list regardless of query parameters.
+      responses:
+        '200':
+          description: Floor list.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Floor'
+  /floors/{floorId}:
+    get:
+      tags:
+      - Floors
+      operationId: getFloor
+      summary: Get one floor plan
+      parameters:
+      - name: floorId
+        in: path
+        required: true
+        description: Floor identifier as returned in Floor._id, e.g. "1" or "LSK3".
+        schema:
+          type: string
+        example: '1'
+      responses:
+        '200':
+          description: Floor plan.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Floor'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  schemas:
+    Error:
+      type: object
+      description: Error envelope used by every failing route observed.
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - message
+          properties:
+            message:
+              type: string
+              example: Bad request
+    Floor:
+      type: object
+      description: A floor plan plus the calibration needed to render it and convert pixels to metres.
+      required:
+      - _id
+      - name
+      - buildingId
+      properties:
+        _id:
+          type: string
+          example: '1'
+        name:
+          type: string
+          example: '1'
+        buildingId:
+          type: string
+          description: References Building._id.
+          example: academicBuilding
+        startX:
+          type: integer
+          description: X origin of the floor image in the shared campus coordinate space.
+          example: -1412
+        startY:
+          type: integer
+          description: Y origin of the floor image in the shared campus coordinate space.
+          example: -1386
+        meterPerPixel:
+          type: number
+          description: Real-world metres represented by one map pixel.
+          example: 0.071875
+        mapWidth:
+          type: integer
+          example: 4516
+        mapHeight:
+          type: integer
+          example: 3291
+        ratio:
+          type: number
+          example: 0.1
+        defaultX:
+          type: integer
+          description: Default desktop viewport centre.
+          example: 520
+        defaultY:
+          type: integer
+          example: -160
+        defaultLevel:
+          type: integer
+          description: Default desktop zoom level.
+          example: 3
+        mobileDefaultX:
+          type: integer
+          example: 520
+        mobileDefaultY:
+          type: integer
+          example: -160
+        mobileDefaultLevel:
+          type: integer
+          example: 3
+        rank:
+          type: integer
+          description: Ordering of this floor within its building.
+          example: 1
+  responses:
+    BadRequest:
+      description: Generic rejection. This API returns the same 400 body for a malformed request and for a route that does not exist, so a 400 is not evidence either way.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              message: Bad request

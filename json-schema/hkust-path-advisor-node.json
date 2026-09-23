@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hkust/main/json-schema/hkust-path-advisor-node.json",
+  "title": "HKUST Path Advisor Node",
+  "type": "object",
+  "x-provenance": {
+    "generated": "2026-08-30",
+    "method": "derived",
+    "source": "Derived from openapi/_original/hkust-path-advisor-openapi.yml, itself probed live from https://pathadvisor.ust.hk/api on 2026-08-30."
+  },
+  "description": "A named feature on a floor plan. Coordinates are floor-plan pixels, not WGS84 degrees.",
+  "required": [
+    "_id",
+    "name",
+    "floorId"
+  ],
+  "properties": {
+    "_id": {
+      "type": "string",
+      "examples": [
+        "0W9Lglf39vxh"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "examples": [
+        "LIFT 1"
+      ]
+    },
+    "floorId": {
+      "type": "string",
+      "description": "References Floor._id.",
+      "examples": [
+        "LSK3"
+      ]
+    },
+    "coordinates": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "[x, y] anchor point in floor-plan pixel space."
+    },
+    "centerCoordinates": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "[x, y] centroid of the footprint."
+    },
+    "connectorId": {
+      "type": "string",
+      "description": "Present when the node is vertical circulation; groups the same lift or stairwell across floors.",
+      "examples": [
+        "LIFT LSK1"
+      ]
+    },
+    "geoLocs": {
+      "$ref": "hkust-path-advisor-multipolygon.json"
+    }
+  }
+}

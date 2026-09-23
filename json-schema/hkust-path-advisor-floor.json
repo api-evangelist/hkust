@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hkust/main/json-schema/hkust-path-advisor-floor.json",
+  "title": "HKUST Path Advisor Floor",
+  "type": "object",
+  "x-provenance": {
+    "generated": "2026-08-30",
+    "method": "derived",
+    "source": "Derived from openapi/_original/hkust-path-advisor-openapi.yml, itself probed live from https://pathadvisor.ust.hk/api on 2026-08-30."
+  },
+  "description": "A floor plan plus the calibration a client needs to render it and convert map pixels to metres.",
+  "required": [
+    "_id",
+    "name",
+    "buildingId"
+  ],
+  "properties": {
+    "_id": {
+      "type": "string",
+      "examples": [
+        "1",
+        "LSK3"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "examples": [
+        "1"
+      ]
+    },
+    "buildingId": {
+      "type": "string",
+      "description": "References Building._id.",
+      "examples": [
+        "academicBuilding"
+      ]
+    },
+    "startX": {
+      "type": "integer",
+      "description": "X origin of the floor image in the shared campus coordinate space."
+    },
+    "startY": {
+      "type": "integer",
+      "description": "Y origin of the floor image in the shared campus coordinate space."
+    },
+    "meterPerPixel": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "description": "Real-world metres represented by one map pixel.",
+      "examples": [
+        0.071875
+      ]
+    },
+    "mapWidth": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "mapHeight": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ratio": {
+      "type": "number"
+    },
+    "defaultX": {
+      "type": "integer"
+    },
+    "defaultY": {
+      "type": "integer"
+    },
+    "defaultLevel": {
+      "type": "integer"
+    },
+    "mobileDefaultX": {
+      "type": "integer"
+    },
+    "mobileDefaultY": {
+      "type": "integer"
+    },
+    "mobileDefaultLevel": {
+      "type": "integer"
+    },
+    "rank": {
+      "type": "integer",
+      "description": "Ordering of this floor within its building."
+    }
+  }
+}

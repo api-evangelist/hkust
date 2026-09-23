@@ -1,0 +1,42 @@
+name: Hong Kong University of Science and Technology — authorization scopes
+provider: Hong Kong University of Science and Technology
+providerId: hkust
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes on 2026-08-30 across every HKUST API surface found. This file records an
+  ABSENCE that was checked for, not a scope catalog that exists.
+summary: >-
+  HKUST publishes no scope vocabulary on any surface. There is no OAuth 2.0 or OpenID
+  Connect authorization server on any HKUST host probed, and therefore no scope strings to
+  catalog. Authorization on the surfaces that have any is coarse-grained and binary.
+surfaces:
+  - surface: HKUST Path Advisor API
+    x-operator: institution
+    scopes: []
+    model: >-
+      None. Public routes are unauthenticated and unscoped; /connectors is a single
+      all-or-nothing gate returning 401 with no scheme advertised.
+  - surface: HKUST API Gateway (Azure API Management)
+    x-operator: tenant
+    scopes: []
+    model: >-
+      Azure API Management Products, not scopes. Authorization granularity is the Product a
+      subscription key is approved against — HKUST names "IoT Sensor Data" and "Sensor
+      Inventory" — and the Product catalog is not enumerable without signing in, so the
+      full list cannot be verified from outside. A Product is closer to a plan than a scope
+      and carries no scope string a client can request.
+  - surface: HKUST Shibboleth Identity Provider
+    x-operator: institution
+    scopes: []
+    model: >-
+      SAML attribute release, not OAuth scopes. The federation-level equivalent is the
+      REFEDS Research & Scholarship entity category, which HKUST's IdP carries — that
+      governs which attribute bundle is released to a service provider. Per-service
+      attribute release policy is not published.
+    entityCategories:
+      - http://refeds.org/category/research-and-scholarship
+      - https://refeds.org/sirtfi
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

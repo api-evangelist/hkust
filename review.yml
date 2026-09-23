@@ -1,51 +1,153 @@
 ---
 name: Hong Kong University of Science and Technology
-description: Hong Kong University of Science and Technology public developer/API footprint review for APIs.json cataloging.
+description: Hong Kong University of Science and Technology public developer/API footprint review for
+  APIs.json cataloging.
 url: https://raw.githubusercontent.com/api-evangelist/hkust/refs/heads/main/review.yml
 created: '2026-06-03'
-modified: '2026-06-03'
+modified: '2026-08-30'
 reviews:
-  - date: '2026-06-03'
-    rating: 3
-    summary: >-
-      HKUST has a genuine, named developer footprint: an Azure API Management
-      developer portal and API Gateway operated by ITSO, an Elastic Stack Open
-      Data Platform, and DataSpace@HKUST, a Dataverse 6.1 repository whose Native
-      API was verified live (/api/info/version returned version 6.1). The
-      developer portal, ITSO service pages, and official website all returned
-      HTTP 200. However most access is gated behind HKUST affiliation, sign-up,
-      and a data access request, and individual API specs are not openly listed,
-      so the public self-service surface is limited. The DataSpace OAI-PMH
-      endpoint returned 503. No public endpoints were fabricated; only verified
-      properties are cataloged.
-    endpoints:
-      - url: https://hkust.developer.azure-api.net/
-        status: 200
-        note: Azure API Management developer portal landing page; live.
-      - url: https://hkust.developer.azure-api.net/apis
-        status: 200
-        note: APIs listing page; live but listings require sign-in to enumerate.
-      - url: https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal
-        status: 200
-        note: ITSO API Gateway & API Portal service description page.
-      - url: https://dataspace.hkust.edu.hk/
-        status: 200
-        note: DataSpace@HKUST research data repository (Dataverse), live.
-      - url: https://dataspace.hkust.edu.hk/api/info/version
-        status: 200
-        note: Dataverse Native API; returned {"status":"OK","data":{"version":"6.1"}}.
-      - url: https://dataspace.hkust.edu.hk/oai?verb=Identify
-        status: 503
-        note: OAI-PMH endpoint present but erroring at review time; not confirmed.
-      - url: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
-        status: 200
-        note: Open Data Platform (Elastic Stack) service page.
-      - url: https://www.ust.hk/
-        status: 200
-        note: Official HKUST website.
-      - url: https://hk.linkedin.com/school/hkust/
-        status: 200
-        note: Official HKUST LinkedIn school page.
-      - url: https://api.ust.hk/hkust-iot
-        status: 0
-        note: HKUST IoT API path referenced publicly but did not resolve (connection failed).
+- date: '2026-08-30'
+  rating: 3
+  summary: 'University-pipeline re-profile with operator attribution settled before anything was saved.
+    Three corrections and one real find. CORRECTION 1: the catalogued API base URL https://api.ust.hk
+    does not exist — HKUST''s own authoritative nameservers (ustsu1/ustsu2.ust.hk) return NXDOMAIN — and
+    the real, live gateway host is https://hkust.azure-api.net, named in HKUST''s own IoT documentation
+    and returning the Azure APIM 401 ''missing subscription key''. CORRECTION 2: five common[] pointers
+    credited to HKUST were the Dataverse project''s own GitHub artifacts (IssueTracker, Releases, SecurityPolicy,
+    CodeOfConduct, ContributionGuide on github.com/IQSS/dataverse) — HKUST was being credited with IQSS''s
+    security policy and code of conduct. Removed. CORRECTION 3: the rate-limits artifact described throttling
+    on OAI-PMH and IIIF endpoints that do not exist here. THE FIND: pathadvisor.ust.hk/api is a genuine
+    institution-operated, public, keyless, CORS-open JSON API on HKUST''s own domain and network, serving
+    the campus spatial model. It carries a full artifact set written from live probes. Two further institution-operated
+    machine-readable surfaces were verified and were previously uncatalogued: the Shibboleth SAML identity
+    provider at idp.ust.hk, registered by the Hong Kong Access Federation into eduGAIN with REFEDS R&S
+    and SIRTFI entity categories; and HKUST Library''s Crossref membership (member 5801, prefix 10.14711,
+    14,453 records). Two negatives confirmed rather than assumed: the DataSpace OAI-PMH provider is explicitly
+    disabled, and the DOI prefix is registered with Crossref, not DataCite.'
+  endpoints:
+  - url: https://pathadvisor.ust.hk/api/floors
+    status: 200
+    note: Path Advisor API, public and keyless; 43 floor plans with metres-per-pixel calibration. Access-Control-Allow-Origin
+      *.
+  - url: https://pathadvisor.ust.hk/api/buildings
+    status: 200
+    note: 7 campus buildings.
+  - url: https://pathadvisor.ust.hk/api/tags
+    status: 200
+    note: 26 point-of-interest categories with icon URLs.
+  - url: https://pathadvisor.ust.hk/api/nodes?name=lift
+    status: 200
+    note: Named nodes with GeoJSON MultiPolygon footprints; the name parameter is required.
+  - url: https://pathadvisor.ust.hk/api/nodes
+    status: 400
+    note: '{"error":{"message":"Empty query is not allowed"}} — distinguishing message, confirms the route
+      exists.'
+  - url: https://pathadvisor.ust.hk/api/connectors
+    status: 401
+    note: '{"error":{"message":"Authorization failed"}} — the one gated route; no WWW-Authenticate, no
+      published enrollment path.'
+  - url: https://hkust.azure-api.net/sensor-data/_search
+    status: 401
+    note: 'Azure APIM: "Access denied due to missing subscription key." The REAL gateway host, live and
+      callable.'
+  - url: https://hkust.azure-api.net/sensor-inventory/_search?q=location:LTL
+    status: 401
+    note: Second documented IoT product; same APIM 401.
+  - url: https://api.ust.hk/
+    status: 0
+    note: NXDOMAIN on HKUST authoritative nameservers ustsu1/ustsu2.ust.hk. The previously catalogued
+      base URL does not exist. Removed.
+  - url: https://hkust.developer.azure-api.net/apis
+    status: 200
+    note: Stock Azure APIM developer portal; 4,942-byte shell listing nothing to an anonymous visitor.
+      Sign-in required to enumerate.
+  - url: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform/retrieve-iot-data-api
+    status: 200
+    note: HKUST names hkust.azure-api.net and the X-Apim-Subscription-Key header here in its own words.
+  - url: https://idp.ust.hk/idp/shibboleth
+    status: 200
+    note: SAML 2.0 IdP metadata, application/xml. entityID https://idp.ust.hk/idp/shibboleth, scope ust.hk.
+      Institution-operated identity federation.
+  - url: https://technical.edugain.org/api.php?action=show_entity&entityid=https://idp.ust.hk/idp/shibboleth
+    status: 200
+    note: 'eduGAIN record: registrationAuthority https://hkaf.edu.hk, registered 2017-01-07, REFEDS R&S
+      + SIRTFI, security contact security@ust.hk.'
+  - url: https://api.crossref.org/prefixes/10.14711
+    status: 200
+    note: Crossref member 5801 "The Hong Kong University of Science and Technology Library".
+  - url: https://api.crossref.org/prefixes/10.14711/works?rows=1
+    status: 200
+    note: 14,453 registered records under the HKUST Library prefix.
+  - url: https://api.datacite.org/dois?query=prefix:10.14711
+    status: 200
+    note: meta.total = 0 — the prefix is Crossref-registered, not DataCite. Confirmed negative.
+  - url: https://dataspace.hkust.edu.hk/api/info/version
+    status: 200
+    note: '{"status":"OK","data":{"version":"6.1","build":null}} on Payara 6.2023.8. Self-hosted; CNAMEs
+      to lbnx99.ust.hk.'
+  - url: https://dataspace.hkust.edu.hk/api/search?q=*&type=dataset&per_page=1
+    status: 200
+    note: 151 published datasets, readable unauthenticated. DOIs under prefix 10.14711.
+  - url: https://dataspace.hkust.edu.hk/oai?verb=Identify
+    status: 503
+    note: '"Sorry. OAI Service is disabled on this Dataverse" — confirmed disabled, not merely unreachable.
+      The 2026-06-03 review left this unconfirmed.'
+  - url: https://repository.hkust.edu.hk/ir/
+    status: 302
+    note: HKUST SPD institutional repository, behind a Cap.js proof-of-work captcha. Bot-blocked, not
+      dead.
+  - url: https://w5.ab.ust.hk/wcq/cgi-bin/
+    status: 200
+    note: Class Schedule & Quota. Institution-operated course catalog, HTML only — no machine-readable
+      contract found.
+  - url: https://navigate.ust.hk/path/api/floors
+    status: 200
+    note: Soft 200 carrying {"meta":{"code":404,"message":"Route does not exist"}}. The newer wayfinding
+      app configures a third-party platform (beautitag.com in its testing config); no public API found
+      on it.
+  - url: https://www.ust.hk/.well-known/security.txt
+    status: 404
+    note: No machine-readable vulnerability disclosure route on any HKUST host probed.
+  - url: https://www.ust.hk/llms.txt
+    status: 404
+    note: No llms.txt.
+- date: '2026-06-03'
+  rating: 3
+  summary: 'HKUST has a genuine, named developer footprint: an Azure API Management developer portal and
+    API Gateway operated by ITSO, an Elastic Stack Open Data Platform, and DataSpace@HKUST, a Dataverse
+    6.1 repository whose Native API was verified live (/api/info/version returned version 6.1). The developer
+    portal, ITSO service pages, and official website all returned HTTP 200. However most access is gated
+    behind HKUST affiliation, sign-up, and a data access request, and individual API specs are not openly
+    listed, so the public self-service surface is limited. The DataSpace OAI-PMH endpoint returned 503.
+    No public endpoints were fabricated; only verified properties are cataloged.'
+  endpoints:
+  - url: https://hkust.developer.azure-api.net/
+    status: 200
+    note: Azure API Management developer portal landing page; live.
+  - url: https://hkust.developer.azure-api.net/apis
+    status: 200
+    note: APIs listing page; live but listings require sign-in to enumerate.
+  - url: https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal
+    status: 200
+    note: ITSO API Gateway & API Portal service description page.
+  - url: https://dataspace.hkust.edu.hk/
+    status: 200
+    note: DataSpace@HKUST research data repository (Dataverse), live.
+  - url: https://dataspace.hkust.edu.hk/api/info/version
+    status: 200
+    note: Dataverse Native API; returned {"status":"OK","data":{"version":"6.1"}}.
+  - url: https://dataspace.hkust.edu.hk/oai?verb=Identify
+    status: 503
+    note: OAI-PMH endpoint present but erroring at review time; not confirmed.
+  - url: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
+    status: 200
+    note: Open Data Platform (Elastic Stack) service page.
+  - url: https://www.ust.hk/
+    status: 200
+    note: Official HKUST website.
+  - url: https://hk.linkedin.com/school/hkust/
+    status: 200
+    note: Official HKUST LinkedIn school page.
+  - url: https://api.ust.hk/hkust-iot
+    status: 0
+    note: HKUST IoT API path referenced publicly but did not resolve (connection failed).

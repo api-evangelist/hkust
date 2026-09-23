@@ -1,0 +1,50 @@
+name: HKUST Path Advisor API — error surface
+provider: Hong Kong University of Science and Technology
+providerId: hkust
+generated: '2026-08-30'
+method: probed
+source: >-
+  Observed directly from live unauthenticated requests to https://pathadvisor.ust.hk/api
+  on 2026-08-30. HKUST publishes no error reference for this API; every entry below is a
+  response body actually returned, not a documented contract.
+x-operator: institution
+envelope:
+  shape: '{"error": {"message": "<string>"}}'
+  notes: >-
+    There is no machine-readable error code, no type URI, and no correlation identifier.
+    Clients can only branch on the HTTP status and the free-text English message, and the
+    message strings are not published as stable. RFC 9457 problem+json is not used.
+errors:
+  - status: 400
+    message: Bad request
+    meaning: >-
+      Generic rejection. Returned both for a malformed request AND for a route that does
+      not exist. This conflation is the most consequential property of this error surface:
+      a 400 cannot be used to distinguish "you asked wrong" from "there is nothing here".
+    observedAt:
+      - https://pathadvisor.ust.hk/api/
+      - https://pathadvisor.ust.hk/api/openapi
+      - https://pathadvisor.ust.hk/api/tags/accessibleToilet
+  - status: 400
+    message: Empty query is not allowed
+    meaning: >-
+      The /nodes route was called without the required `name` query parameter. Distinct
+      from the generic 400 message, which is how /nodes was confirmed to exist.
+    observedAt:
+      - https://pathadvisor.ust.hk/api/nodes
+      - https://pathadvisor.ust.hk/api/nodes?floorId=1
+  - status: 401
+    message: Authorization failed
+    meaning: >-
+      The /connectors route requires authorization. No WWW-Authenticate header is returned
+      and HKUST publishes no instructions for obtaining credentials, so an unauthenticated
+      client has no documented path forward.
+    observedAt:
+      - https://pathadvisor.ust.hk/api/connectors
+gaps:
+  - No 429 or rate-limit response was observed, and no rate-limit headers are returned.
+  - No 5xx response was observed during probing.
+  - No Retry-After, X-Request-Id, or equivalent diagnostic header is present.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,74 @@
+name: Hong Kong University of Science and Technology — API lifecycle posture
+provider: Hong Kong University of Science and Technology
+providerId: hkust
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes on 2026-08-30 plus HKUST's own service pages. Records what HKUST commits to
+  about versioning, change and deprecation across its surfaces — which, for most of them,
+  is nothing.
+x-operator: institution
+surfaces:
+  - surface: HKUST Path Advisor API
+    baseURL: https://pathadvisor.ust.hk/api
+    x-operator: institution
+    versioning: none
+    detail: >-
+      No version in the path, no version header, no media-type versioning, no changelog, no
+      deprecation policy, no status page. Consumers have no notice mechanism of any kind.
+    successorRisk: >-
+      A material lifecycle signal was found in the front end. The current HKUST wayfinding
+      app at navigate.ust.hk/path/app is a DIFFERENT product whose bundle configures its API
+      base as https://navigate.ust.hk/path/api and names beautitag.com as its
+      testing environment — a third-party platform. Every route probed on that new base
+      answered "Route does not exist". The pathadvisor.ust.hk API documented here is the
+      older HKUST-operated service, still live and still public, but it is plainly no longer
+      the one the flagship app is built on. Treat it as a working API with an unannounced
+      successor, and do not assume it is maintained.
+    evidence:
+      - url: https://pathadvisor.ust.hk/api/floors
+        status: 200
+      - url: https://navigate.ust.hk/path/api/floors
+        status: 200
+        note: 'Soft 200 carrying {"meta":{"code":404,"message":"Route does not exist"}}'
+  - surface: HKUST API Gateway (Azure API Management)
+    baseURL: https://hkust.azure-api.net
+    x-operator: tenant
+    versioning: platform-managed
+    detail: >-
+      Azure API Management supports per-API versions and revisions, but HKUST's catalog is
+      not enumerable without an ITSO account, so no versioning commitment can be verified
+      from outside.
+    deprecationEvidence: >-
+      HKUST does publish deprecations on its service pages: the Azure OpenAI API Service is
+      labelled "(Deprecated)" on itso.hkust.edu.hk. Deprecation is communicated as a web page
+      edit, not as a machine-readable signal, a Sunset header, or a changelog feed.
+      evidence: https://itso.hkust.edu.hk/services/it-infrastructure/azure-openai-api-service
+  - surface: DataSpace@HKUST
+    baseURL: https://dataspace.hkust.edu.hk/api
+    x-operator: institution
+    versioning: upstream
+    detail: >-
+      Version is whatever Dataverse release HKUST is running — /api/info/version reports
+      6.1, and Dataverse's own versioning and deprecation policy governs the contract.
+      Dataverse 6.1 was released in 2023, so the deployment trails upstream. HKUST publishes
+      no upgrade schedule.
+    evidence:
+      - url: https://dataspace.hkust.edu.hk/api/info/version
+        status: 200
+        body: '{"status":"OK","data":{"version":"6.1","build":null}}'
+  - surface: HKUST Shibboleth Identity Provider
+    x-operator: institution
+    versioning: federation-managed
+    detail: >-
+      Metadata lifecycle is managed by the Hong Kong Access Federation and republished into
+      eduGAIN. Registered 2017-01-07. Federation metadata carries its own validity window and
+      refresh cadence, which is a genuine machine-readable lifecycle signal — the only one
+      HKUST participates in.
+observations:
+  - No HKUST surface publishes a changelog, a status page, a Sunset or Deprecation header, or a versioned URL.
+  - No .well-known/security.txt exists on any HKUST host probed, so there is no machine-readable vulnerability-disclosure route; the SAML federation metadata's security@ust.hk contact is the only published security address found.
+  - The 2026-06-03 profile recorded https://api.ust.hk as this institution's API base URL. That hostname does not exist: HKUST's own authoritative nameservers (ustsu1/ustsu2.ust.hk) return NXDOMAIN for it. It has been removed.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hkust/main/json-schema/hkust-path-advisor-tag.json",
+  "title": "HKUST Path Advisor Tag",
+  "type": "object",
+  "x-provenance": {
+    "generated": "2026-08-30",
+    "method": "derived",
+    "source": "Derived from openapi/_original/hkust-path-advisor-openapi.yml, itself probed live from https://pathadvisor.ust.hk/api on 2026-08-30."
+  },
+  "description": "A point-of-interest category used to classify campus features.",
+  "required": [
+    "_id",
+    "name"
+  ],
+  "properties": {
+    "_id": {
+      "type": "string",
+      "examples": [
+        "accessibleToilet"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "examples": [
+        "Accessible Toilet"
+      ]
+    },
+    "imageUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "Map icon for the category."
+    }
+  }
+}

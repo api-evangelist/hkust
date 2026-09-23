@@ -13,6 +13,9 @@
     "address": "address",
     "areaServed": "areaServed",
     "sameAs": "sameAs",
+    "operator": {
+      "@id": "hkust:operator"
+    },
     "api": {
       "@id": "hkust:api",
       "@container": "@set"
@@ -22,20 +25,37 @@
   "@id": "https://www.ust.hk/",
   "name": "Hong Kong University of Science and Technology",
   "url": "https://www.ust.hk/",
-  "description": "Public research university in Clear Water Bay, Hong Kong SAR, operating an Azure API Management developer portal, an Open Data Platform on the Elastic Stack, and DataSpace@HKUST, a Dataverse research data repository.",
+  "description": "Public research university in Clear Water Bay, Hong Kong SAR. One public keyless API of its own (the Path Advisor campus wayfinding API), an affiliation-gated Azure API Management gateway run by ITSO, a self-hosted Dataverse research data repository, and a Shibboleth identity provider published into eduGAIN.",
   "areaServed": "Hong Kong SAR",
   "sameAs": [
     "https://hk.linkedin.com/school/hkust/",
     "https://en.wikipedia.org/wiki/Hong_Kong_University_of_Science_and_Technology"
   ],
+  "hkust:provenance": {
+    "generated": "2026-08-30",
+    "method": "derived",
+    "source": "Derived from apis.yml after live re-verification of every surface on 2026-08-30. The 'operator' key states who runs each thing, which for a university is rarely the institution."
+  },
   "api": [
     {
       "@type": "WebAPI",
-      "@id": "hkust:api/developer-portal",
-      "name": "HKUST API Portal & Gateway",
+      "@id": "hkust:api/path-advisor",
+      "name": "HKUST Path Advisor API",
+      "url": "https://pathadvisor.ust.hk/",
+      "endpointURL": "https://pathadvisor.ust.hk/api",
+      "documentation": "https://raw.githubusercontent.com/api-evangelist/hkust/main/openapi/hkust-path-advisor-openapi.yml",
+      "operator": "institution",
+      "description": "Public, keyless JSON API serving the HKUST campus spatial model: buildings, calibrated floor plans, point-of-interest categories, and named nodes with GeoJSON footprints. The one API found on an HKUST host that needs no affiliation and no key."
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "hkust:api/gateway",
+      "name": "HKUST API Gateway and API Portal",
       "url": "https://hkust.developer.azure-api.net/",
+      "endpointURL": "https://hkust.azure-api.net",
       "documentation": "https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal",
-      "description": "Centralized HKUST API platform on Azure API Management, run by the IT Services Office."
+      "operator": "tenant",
+      "description": "HKUST's Azure API Management tenant, run by the IT Services Office. Live and callable, but every product requires an ITSO account, a subscription request and human approval; the catalog is not enumerable anonymously."
     },
     {
       "@type": "WebAPI",
@@ -44,15 +64,27 @@
       "url": "https://dataspace.hkust.edu.hk/",
       "endpointURL": "https://dataspace.hkust.edu.hk/api",
       "documentation": "https://guides.dataverse.org/en/latest/api/native-api.html",
-      "description": "Dataverse 6.1 Native REST API for searching and retrieving dataverses, datasets, and data files with DOI persistent identifiers."
+      "operator": "institution",
+      "description": "Dataverse 6.1 self-hosted on HKUST's own domain and network, serving 151 published datasets over the upstream Dataverse Native REST API. HKUST operates the deployment; the API contract is the Dataverse project's and is deliberately not republished here."
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "hkust:api/identity-federation",
+      "name": "HKUST Shibboleth Identity Provider",
+      "url": "https://idp.ust.hk/idp/shibboleth",
+      "endpointURL": "https://idp.ust.hk/idp/profile/SAML2/POST/SSO",
+      "documentation": "https://technical.edugain.org/api.php?action=show_entity&entityid=https://idp.ust.hk/idp/shibboleth",
+      "operator": "institution",
+      "description": "SAML 2.0 identity provider serving machine-readable metadata, registered by the Hong Kong Access Federation and published into eduGAIN with the REFEDS Research and Scholarship and SIRTFI entity categories."
     },
     {
       "@type": "WebAPI",
       "@id": "hkust:api/open-data-platform",
       "name": "HKUST Open Data Platform",
       "url": "https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform",
-      "documentation": "https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform",
-      "description": "Secure central smart-campus data repository built on the Elastic Stack; access via the campus data access process."
+      "documentation": "https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform/retrieve-iot-data-api",
+      "operator": "institution",
+      "description": "Elastic Stack repository for smart-campus and IoT sensor data. Reached only through the API Gateway, with a subscription key issued after review; there is no open self-service endpoint."
     }
   ]
 }

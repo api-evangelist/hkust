@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hkust/main/json-schema/hkust-path-advisor-multipolygon.json",
+  "title": "HKUST Path Advisor MultiPolygon",
+  "type": "object",
+  "x-provenance": {
+    "generated": "2026-08-30",
+    "method": "derived",
+    "source": "Derived from openapi/_original/hkust-path-advisor-openapi.yml, itself probed live from https://pathadvisor.ust.hk/api on 2026-08-30."
+  },
+  "description": "GeoJSON MultiPolygon geometry (RFC 7946 shape) expressed in floor-plan pixel coordinates. Convert to metres with Floor.meterPerPixel and Floor.startX/startY.",
+  "required": [
+    "type",
+    "coordinates"
+  ],
+  "properties": {
+    "type": {
+      "const": "MultiPolygon"
+    },
+    "coordinates": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "provider": "hkust",
+  "sources": [
+    "_original/hkust-path-advisor-openapi.yml"
+  ],
+  "outputs": [
+    "hkust-buildings-api-openapi.yml",
+    "hkust-floors-api-openapi.yml",
+    "hkust-nodes-api-openapi.yml",
+    "hkust-tags-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "hkust-path-advisor-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/hkust-path-advisor-openapi_2.yml: archived document superseded by a larger archived document",
+    "hkust-buildings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "hkust-floors-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "hkust-nodes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "hkust-tags-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

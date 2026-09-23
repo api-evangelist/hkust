@@ -1,0 +1,63 @@
+openapi: 3.2.0
+info:
+  title: HKUST Path Advisor Buildings API
+  version: '1.0'
+  description: Public, keyless JSON API behind HKUST Path Advisor, the university's indoor/outdoor campus wayfinding service at https://pathadvisor.ust.hk.
+  contact:
+    name: HKUST Information Technology Services Office
+    url: https://itso.hkust.edu.hk/
+  x-operator: institution
+  x-artifact-provenance:
+    generated: '2026-08-30'
+    method: probed
+    source: Live unauthenticated GET probes against https://pathadvisor.ust.hk/api on 2026-08-30. Endpoints confirmed by a 200 or a distinguishing non-generic error; the service returns a generic 400 {"error":{"message":"Bad request"}} for unknown routes, so only 200 and 401 responses were treated as proof a route exists.
+servers:
+- url: https://pathadvisor.ust.hk/api
+  description: Production. CORS Access-Control-Allow-Origin *; HSTS; nginx. No API key required.
+tags:
+- name: Buildings
+  description: Campus buildings.
+paths:
+  /buildings:
+    get:
+      tags:
+      - Buildings
+      operationId: listBuildings
+      summary: List campus buildings
+      description: Returns every building in the campus model. Observed to return the full list regardless of query parameters; no filtering parameter was found to take effect.
+      responses:
+        '200':
+          description: Building list.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Building'
+              example:
+                data:
+                - _id: academicBuilding
+                  name: Academic Building
+                - _id: cyt
+                  name: CYT
+components:
+  schemas:
+    Building:
+      type: object
+      description: A campus building.
+      required:
+      - _id
+      - name
+      properties:
+        _id:
+          type: string
+          description: Building identifier, used as Floor.buildingId.
+          example: academicBuilding
+        name:
+          type: string
+          example: Academic Building

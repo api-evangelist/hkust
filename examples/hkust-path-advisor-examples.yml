@@ -1,0 +1,149 @@
+name: HKUST Path Advisor API — captured examples
+provider: Hong Kong University of Science and Technology
+providerId: hkust
+generated: '2026-08-30'
+method: probed
+source: >-
+  Verbatim responses captured from live unauthenticated GET requests to
+  https://pathadvisor.ust.hk/api on 2026-08-30. Payloads are truncated to the first
+  entries for readability; nothing was edited or invented.
+x-operator: institution
+examples:
+  - name: List campus buildings
+    request:
+      method: GET
+      url: https://pathadvisor.ust.hk/api/buildings
+    response:
+      status: 200
+      contentType: application/json; charset=utf-8
+      totalItems: 7
+      body:
+        data:
+          - _id: academicBuilding
+            name: Academic Building
+          - _id: campusMap
+            name: Campus Map
+          - _id: cyt
+            name: CYT
+          - _id: ias
+            name: IAS
+  - name: List floor plans
+    request:
+      method: GET
+      url: https://pathadvisor.ust.hk/api/floors
+    response:
+      status: 200
+      totalItems: 43
+      body:
+        data:
+          - _id: '1'
+            startX: -1412
+            startY: -1386
+            name: '1'
+            buildingId: academicBuilding
+            meterPerPixel: 0.071875
+            mapWidth: 4516
+            mapHeight: 3291
+            ratio: 0.1
+            defaultX: 520
+            defaultY: -160
+            defaultLevel: 3
+            mobileDefaultLevel: 3
+            mobileDefaultX: 520
+            mobileDefaultY: -160
+            rank: 1
+  - name: Get one floor plan
+    request:
+      method: GET
+      url: https://pathadvisor.ust.hk/api/floors/1
+    response:
+      status: 200
+      body:
+        data:
+          _id: '1'
+          name: '1'
+          buildingId: academicBuilding
+          meterPerPixel: 0.071875
+          mapWidth: 4516
+          mapHeight: 3291
+          rank: 1
+  - name: List point-of-interest categories
+    request:
+      method: GET
+      url: https://pathadvisor.ust.hk/api/tags
+    response:
+      status: 200
+      totalItems: 26
+      body:
+        data:
+          - _id: accessibleToilet
+            name: Accessible Toilet
+            imageUrl: https://pathadvisor.ust.hk/api/tags/accessibleToilet.png
+          - _id: accommodation
+            name: Guest Accommodation
+  - name: Search nodes by name
+    request:
+      method: GET
+      url: https://pathadvisor.ust.hk/api/nodes?name=lift&limit=2
+    response:
+      status: 200
+      body:
+        data:
+          - _id: 0W9Lglf39vxh
+            coordinates: [11, 18]
+            name: LIFT 1
+            geoLocs:
+              type: MultiPolygon
+              coordinates:
+                - - - [-1, 0]
+                    - [11, 34]
+                    - [46, 22]
+                    - [33, -14]
+            connectorId: LIFT LSK1
+            floorId: LSK3
+            centerCoordinates: [22, 11]
+  - name: Get one node
+    request:
+      method: GET
+      url: https://pathadvisor.ust.hk/api/nodes/0W9Lglf39vxh
+    response:
+      status: 200
+      body:
+        data:
+          _id: 0W9Lglf39vxh
+          name: LIFT 1
+          floorId: LSK3
+          connectorId: LIFT LSK1
+  - name: Node search without the required name parameter
+    request:
+      method: GET
+      url: https://pathadvisor.ust.hk/api/nodes
+    response:
+      status: 400
+      body:
+        error:
+          message: Empty query is not allowed
+  - name: Gated connectors route, unauthenticated
+    request:
+      method: GET
+      url: https://pathadvisor.ust.hk/api/connectors
+    response:
+      status: 401
+      body:
+        error:
+          message: Authorization failed
+  - name: Unknown route — the generic rejection
+    request:
+      method: GET
+      url: https://pathadvisor.ust.hk/api/openapi
+    response:
+      status: 400
+      body:
+        error:
+          message: Bad request
+      note: >-
+        The same 400 body is returned for a malformed request and for a route that does not
+        exist, so a 400 from this API is not evidence that a route exists.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,66 @@
+openapi: 3.2.0
+info:
+  title: HKUST Path Advisor Tags API
+  version: '1.0'
+  description: Public, keyless JSON API behind HKUST Path Advisor, the university's indoor/outdoor campus wayfinding service at https://pathadvisor.ust.hk.
+  contact:
+    name: HKUST Information Technology Services Office
+    url: https://itso.hkust.edu.hk/
+  x-operator: institution
+  x-artifact-provenance:
+    generated: '2026-08-30'
+    method: probed
+    source: Live unauthenticated GET probes against https://pathadvisor.ust.hk/api on 2026-08-30. Endpoints confirmed by a 200 or a distinguishing non-generic error; the service returns a generic 400 {"error":{"message":"Bad request"}} for unknown routes, so only 200 and 401 responses were treated as proof a route exists.
+servers:
+- url: https://pathadvisor.ust.hk/api
+  description: Production. CORS Access-Control-Allow-Origin *; HSTS; nginx. No API key required.
+tags:
+- name: Tags
+  description: Point-of-interest categories.
+paths:
+  /tags:
+    get:
+      tags:
+      - Tags
+      operationId: listTags
+      summary: List point-of-interest categories
+      description: Returns the categories Path Advisor uses to classify campus features — accessible toilet, guest accommodation, lift, and so on — each with the URL of its map icon.
+      responses:
+        '200':
+          description: Tag list.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tag'
+              example:
+                data:
+                - _id: accessibleToilet
+                  name: Accessible Toilet
+                  imageUrl: https://pathadvisor.ust.hk/api/tags/accessibleToilet.png
+components:
+  schemas:
+    Tag:
+      type: object
+      description: A point-of-interest category.
+      required:
+      - _id
+      - name
+      properties:
+        _id:
+          type: string
+          example: accessibleToilet
+        name:
+          type: string
+          example: Accessible Toilet
+        imageUrl:
+          type: string
+          format: uri
+          description: Map icon for the category.
+          example: https://pathadvisor.ust.hk/api/tags/accessibleToilet.png

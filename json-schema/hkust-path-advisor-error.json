@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hkust/main/json-schema/hkust-path-advisor-error.json",
+  "title": "HKUST Path Advisor Error",
+  "type": "object",
+  "x-provenance": {
+    "generated": "2026-08-30",
+    "method": "derived",
+    "source": "Derived from openapi/_original/hkust-path-advisor-openapi.yml, itself probed live from https://pathadvisor.ust.hk/api on 2026-08-30."
+  },
+  "description": "Error envelope used by every failing route observed on this API.",
+  "required": [
+    "error"
+  ],
+  "properties": {
+    "error": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "examples": [
+            "Bad request",
+            "Empty query is not allowed",
+            "Authorization failed"
+          ]
+        }
+      }
+    }
+  }
+}

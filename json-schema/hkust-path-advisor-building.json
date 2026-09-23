@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hkust/main/json-schema/hkust-path-advisor-building.json",
+  "title": "HKUST Path Advisor Building",
+  "type": "object",
+  "x-provenance": {
+    "generated": "2026-08-30",
+    "method": "derived",
+    "source": "Derived from openapi/_original/hkust-path-advisor-openapi.yml, itself probed live from https://pathadvisor.ust.hk/api on 2026-08-30."
+  },
+  "required": [
+    "_id",
+    "name"
+  ],
+  "properties": {
+    "_id": {
+      "type": "string",
+      "description": "Building identifier, referenced by Floor.buildingId.",
+      "examples": [
+        "academicBuilding"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "examples": [
+        "Academic Building"
+      ]
+    }
+  }
+}

@@ -1,0 +1,92 @@
+name: Hong Kong University of Science and Technology — authentication across surfaces
+provider: Hong Kong University of Science and Technology
+providerId: hkust
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live unauthenticated probes on 2026-08-30 plus HKUST's own published instructions on
+  itso.hkust.edu.hk. Each entry records the operator of the surface, because for a
+  university the authentication story is mostly somebody else's.
+surfaces:
+  - surface: HKUST Path Advisor API
+    baseURL: https://pathadvisor.ust.hk/api
+    x-operator: institution
+    scheme: none
+    description: >-
+      No authentication of any kind on the public routes. Access-Control-Allow-Origin is *,
+      so the API is callable directly from any browser origin. Verified by unauthenticated
+      200 responses from /floors, /buildings, /tags, /nodes and /nodes/{id}.
+    exception:
+      route: /connectors
+      status: 401
+      body: '{"error":{"message":"Authorization failed"}}'
+      note: >-
+        Gated, with no WWW-Authenticate header and no published enrollment path. The scheme
+        is unknown and is deliberately not guessed at.
+    evidence:
+      - url: https://pathadvisor.ust.hk/api/floors
+        status: 200
+      - url: https://pathadvisor.ust.hk/api/connectors
+        status: 401
+  - surface: HKUST API Gateway (Azure API Management)
+    baseURL: https://hkust.azure-api.net
+    x-operator: tenant
+    scheme: apiKey
+    parameter: X-Apim-Subscription-Key
+    in: header
+    description: >-
+      Azure API Management subscription key, passed as a request header. HKUST documents the
+      header name and the flow explicitly: sign up at the HKUST API Portal with an ITSO
+      account, subscribe to a Product such as "IoT Sensor Data", and a key is emailed after
+      the request is reviewed and approved. Enrollment therefore requires HKUST affiliation
+      and human approval — this is not a self-service public API.
+    enrollment: https://hkust.developer.azure-api.net/signup
+    documentation: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform/retrieve-iot-data-api
+    evidence:
+      - url: https://hkust.azure-api.net/sensor-data/_search
+        status: 401
+        body: 'Access denied due to missing subscription key.'
+      - url: https://hkust.azure-api.net/sensor-inventory/_search?q=location:LTL
+        status: 401
+  - surface: HKUST Shibboleth Identity Provider
+    entityID: https://idp.ust.hk/idp/shibboleth
+    x-operator: institution
+    scheme: SAML 2.0 / Shibboleth
+    description: >-
+      The institution's own SAML 2.0 identity provider — the authentication surface HKUST
+      genuinely operates itself. Asserts the scopes ust.hk, connect.ust.hk and alumni.ust.hk.
+      Supports SAML 2.0 HTTP-POST, HTTP-Redirect and SOAP/ECP bindings plus the legacy
+      Shibboleth 1.0 profile. Registered by the Hong Kong Access Federation and published
+      into eduGAIN, carrying the REFEDS Research & Scholarship and SIRTFI entity categories.
+    endpoints:
+      - https://idp.ust.hk/idp/profile/SAML2/POST/SSO
+      - https://idp.ust.hk/idp/profile/SAML2/Redirect/SSO
+      - https://idp.ust.hk/idp/profile/SAML2/SOAP/ECP
+    securityContact: security@ust.hk
+    evidence:
+      - url: https://idp.ust.hk/idp/shibboleth
+        status: 200
+      - url: https://technical.edugain.org/api.php?action=show_entity&entityid=https://idp.ust.hk/idp/shibboleth
+        status: 200
+  - surface: DataSpace@HKUST (Dataverse Native API)
+    baseURL: https://dataspace.hkust.edu.hk/api
+    x-operator: institution
+    scheme: apiKey
+    parameter: X-Dataverse-key
+    in: header
+    description: >-
+      Read access to published datasets is unauthenticated — /api/info/version and
+      /api/search answered without credentials. Write and administrative operations use the
+      upstream Dataverse X-Dataverse-key header. The authentication contract is the Dataverse
+      project's, not HKUST's; HKUST operates the deployment on its own domain and hardware.
+    evidence:
+      - url: https://dataspace.hkust.edu.hk/api/info/version
+        status: 200
+      - url: https://dataspace.hkust.edu.hk/api/search?q=*&type=dataset&per_page=1
+        status: 200
+notFound:
+  - No OAuth 2.0 or OpenID Connect authorization server is published on any HKUST host probed.
+  - No .well-known/security.txt on www.ust.hk, itso.hkust.edu.hk or dataspace.hkust.edu.hk (404).
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

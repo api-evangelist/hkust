@@ -141,6 +141,27 @@ components:
             message:
               type: string
               example: Bad request
+    MultiPolygon:
+      type: object
+      description: GeoJSON MultiPolygon geometry (RFC 7946 shape). Coordinates are floor-plan pixels, not WGS84 degrees — convert with Floor.meterPerPixel and Floor.startX/startY.
+      required:
+      - type
+      - coordinates
+      properties:
+        type:
+          type: string
+          enum:
+          - MultiPolygon
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              type: array
+              items:
+                type: number
+                minItems: 2
+                maxItems: 2
     Node:
       type: object
       description: A named feature on a floor plan, with a point coordinate and a GeoJSON MultiPolygon footprint in the same floor-plan pixel coordinate space.
@@ -185,27 +206,6 @@ components:
           example: LIFT LSK1
         geoLocs:
           $ref: '#/components/schemas/MultiPolygon'
-    MultiPolygon:
-      type: object
-      description: GeoJSON MultiPolygon geometry (RFC 7946 shape). Coordinates are floor-plan pixels, not WGS84 degrees — convert with Floor.meterPerPixel and Floor.startX/startY.
-      required:
-      - type
-      - coordinates
-      properties:
-        type:
-          type: string
-          enum:
-          - MultiPolygon
-        coordinates:
-          type: array
-          items:
-            type: array
-            items:
-              type: array
-              items:
-                type: number
-                minItems: 2
-                maxItems: 2
   responses:
     BadRequest:
       description: Generic rejection. This API returns the same 400 body for a malformed request and for a route that does not exist, so a 400 is not evidence either way.

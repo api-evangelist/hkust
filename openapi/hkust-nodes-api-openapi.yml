@@ -126,6 +126,16 @@ paths:
                 error:
                   message: Authorization failed
 components:
+  responses:
+    BadRequest:
+      description: Generic rejection. This API returns the same 400 body for a malformed request and for a route that does not exist, so a 400 is not evidence either way.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              message: Bad request
   schemas:
     Error:
       type: object
@@ -206,13 +216,3 @@ components:
           example: LIFT LSK1
         geoLocs:
           $ref: '#/components/schemas/MultiPolygon'
-  responses:
-    BadRequest:
-      description: Generic rejection. This API returns the same 400 body for a malformed request and for a route that does not exist, so a 400 is not evidence either way.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              message: Bad request

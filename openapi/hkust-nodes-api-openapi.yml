@@ -126,31 +126,7 @@ paths:
                 error:
                   message: Authorization failed
 components:
-  responses:
-    BadRequest:
-      description: Generic rejection. This API returns the same 400 body for a malformed request and for a route that does not exist, so a 400 is not evidence either way.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              message: Bad request
   schemas:
-    Error:
-      type: object
-      description: Error envelope used by every failing route observed.
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - message
-          properties:
-            message:
-              type: string
-              example: Bad request
     MultiPolygon:
       type: object
       description: GeoJSON MultiPolygon geometry (RFC 7946 shape). Coordinates are floor-plan pixels, not WGS84 degrees — convert with Floor.meterPerPixel and Floor.startX/startY.
@@ -216,3 +192,27 @@ components:
           example: LIFT LSK1
         geoLocs:
           $ref: '#/components/schemas/MultiPolygon'
+    Error:
+      type: object
+      description: Error envelope used by every failing route observed.
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - message
+          properties:
+            message:
+              type: string
+              example: Bad request
+  responses:
+    BadRequest:
+      description: Generic rejection. This API returns the same 400 body for a malformed request and for a route that does not exist, so a 400 is not evidence either way.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              message: Bad request

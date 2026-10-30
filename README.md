@@ -1,4 +1,4 @@
-# Hong Kong University of Science and Technology (hkust)
+# Hong Kong University of Science and Technology
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,58 +64,145 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-The Hong Kong University of Science and Technology (HKUST) is a public research university in Clear Water Bay, Hong Kong SAR, ranked #82 in the QS World University Rankings 2025. This repository catalogs HKUST's public developer and API footprint as an [APIs.json](http://apisjson.org/) profile for the API Evangelist network.
+The Hong Kong University of Science and Technology (HKUST) is a public research university in Clear Water Bay, Hong Kong SAR. Its programmable footprint is real but small and mostly closed. One API on an HKUST host is public and keyless: the Path Advisor campus wayfinding API at pathadvisor.ust.hk, which serves buildings, calibrated floor plans, point-of-interest categories and named map nodes with GeoJSON footprints, CORS-open and with no key. Beyond it, the IT Services Office runs an Azure API Management gateway and portal — live and callable at hkust.azure-api.net, but every product needs an ITSO account, a subscription request and human approval, and the catalog cannot be enumerated anonymously. DataSpace@HKUST is a Dataverse 6.1 instance HKUST self-hosts on its own domain and network, serving 151 published datasets over the upstream Dataverse Native API; its OAI-PMH provider is switched off. The institution's most substantial machine-readable assets are not developer APIs at all: a Shibboleth SAML identity provider published into eduGAIN through the Hong Kong Access Federation, and HKUST Library's Crossref membership under DOI prefix 10.14711, with 14,453 registered records. HKUST publishes no OpenAPI, no changelog, no status page and no security.txt for any of it. A previously catalogued API base URL of api.ust.hk does not exist — HKUST's own authoritative nameservers return NXDOMAIN for that hostname — and has been removed.
 
-- APIs.json: https://raw.githubusercontent.com/api-evangelist/hkust/refs/heads/main/apis.yml
-- Run it with Naftiko: https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=hkust-api-evangelist&utm_content=repo
+**Areas:** University · Higher Education · Education · Research · Hong Kong · China · Research Data · Open Data · Identity Federation · Course Catalog · Library · Smart Campus
 
-## Type
+## Hong Kong University of Science and Technology on APIs.io
 
-- Index
-- Consumer
-- 3rd-Party
+Everything profiled for Hong Kong University of Science and Technology is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/hkust/](https://apis.io/providers/hkust/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (9)
 
-Education, Higher Education, University, Research, Open Data, Hong Kong, China
+- [HKUST API Gateway and API Portal](https://apis.io/apis/hkust/api-gateway/) — HKUST's Azure API Management tenant, operated by the IT Services Office. The gateway is live and callable at hkust.azure-api.net and returns the Azure APIM…
+- [DataSpace@HKUST Research Data Repository API](https://apis.io/apis/hkust/dataspace/) — The institutional research data repository, running Dataverse 6.1 on Payara. HKUST self-hosts it: dataspace.hkust.edu.hk is on the university's own…
+- [HKUST Shibboleth Identity Provider](https://apis.io/apis/hkust/identity-federation/) — HKUST's own SAML 2.0 identity provider, serving machine-readable metadata at idp.ust.hk/idp/shibboleth. Asserts the scopes ust.hk, connect.ust.hk and…
+- [HKUST Library Crossref DOI Registration](https://apis.io/apis/hkust/crossref-doi/) — HKUST Library is Crossref member 5801 and owns DOI prefix 10.14711, under which 14,453 records are registered and retrievable through the Crossref REST API…
+- [HKUST Open Data Platform](https://apis.io/apis/hkust/open-data-platform/) — Central Elastic Stack repository established by ITSO to collect, search and visualise smart-campus data, including the IoT sensor inventory and sensor…
+- [Hong Kong University of Science and Technology Buildings API](https://apis.io/apis/hkust/hkust-buildings-api/) — Campus buildings.
+- [Hong Kong University of Science and Technology Floors API](https://apis.io/apis/hkust/hkust-floors-api/) — Floor plans and their map calibration.
+- [Hong Kong University of Science and Technology Nodes API](https://apis.io/apis/hkust/hkust-nodes-api/) — Named map features with GeoJSON footprints.
+- [Hong Kong University of Science and Technology Tags API](https://apis.io/apis/hkust/hkust-tags-api/) — Point-of-interest categories.
 
-## APIs
+### Published properties
 
-- **HKUST API Portal & Gateway** — Centralized Azure API Management developer portal and API Gateway run by HKUST ITSO; departments publish application APIs, developers discover and sign up for keys. Docs: https://hkust.developer.azure-api.net/ — Service overview: https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal
-- **DataSpace@HKUST Research Data Repository API** — Institutional research data repository on Dataverse 6.1 with the standard Dataverse Native REST API and DOI persistent identifiers. Site: https://dataspace.hkust.edu.hk/ — Native API docs: https://guides.dataverse.org/en/latest/api/native-api.html
-- **HKUST Open Data Platform** — Secure central smart-campus data repository built on the Elastic Stack. Docs: https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## Plans
+#### JSON Schema (6)
 
-- [plans/hkust-plans-pricing.yml](plans/hkust-plans-pricing.yml)
+The data models the API reads and writes.
 
-## Rate Limits
+- [HKUST Path Advisor Building](https://apis.io/schemas/hkust/hkust-path-advisor-building/)
+- [HKUST Path Advisor Error](https://apis.io/schemas/hkust/hkust-path-advisor-error/)
+- [HKUST Path Advisor Floor](https://apis.io/schemas/hkust/hkust-path-advisor-floor/)
+- [HKUST Path Advisor MultiPolygon](https://apis.io/schemas/hkust/hkust-path-advisor-multipolygon/)
+- [HKUST Path Advisor Node](https://apis.io/schemas/hkust/hkust-path-advisor-node/)
+- [HKUST Path Advisor Tag](https://apis.io/schemas/hkust/hkust-path-advisor-tag/)
 
-- [rate-limits/hkust-rate-limits.yml](rate-limits/hkust-rate-limits.yml)
+#### JSON-LD (1)
 
-## FinOps
+Linked-data contexts for the provider's vocabulary.
 
-- [finops/hkust-finops.yml](finops/hkust-finops.yml)
+- [Hkust Context](https://apis.io/jsonld/hkust/hkust-context/)
 
-## Timestamps
+#### Governance rules (1)
 
-- Created: 2026-06-03
-- Modified: 2026-06-03
+Spectral rulesets for the provider's contracts.
 
-## Common Properties
+- [Hong Kong University of Science and Technology — path advisor rules](https://apis.io/rules/hkust/hkust-path-advisor-rules/)
 
-- Website: https://www.ust.hk/
-- Developer Portal: https://hkust.developer.azure-api.net/
-- LinkedIn: https://hk.linkedin.com/school/hkust/
+#### Security (2)
 
-## Notes
+Authentication, trust centre, and vulnerability disclosure.
 
-- All URLs were probed during cataloging. The developer portal, ITSO service pages, DataSpace, and the official website returned HTTP 200. DataSpace@HKUST returns a live Dataverse `/api/info/version` response (version 6.1), confirming an operational Native API.
-- The DataSpace OAI-PMH endpoint (`/oai?verb=Identify`) returned HTTP 503 at the time of review and was not confirmed as functioning.
-- The HKUST API Portal and API Gateway are primarily for HKUST-affiliated departments and developers; API access requires sign-up and a data access request rather than open self-service.
-- There is no single official institutional "HKUST" GitHub organization; numerous departmental and research-lab GitHub orgs exist (e.g., HKUST-Aerial-Robotics), so no organization-wide GitHub property is asserted in the common block.
-- No fabricated endpoints are included; only APIs and properties confirmed via public sources are listed.
+- [Hkust Authentication](https://apis.io/security/hkust/hkust-authentication/)
+- [Hkust Domain Security](https://apis.io/security/hkust/hkust-domain-security/)
 
-## Maintainers
+#### OAuth scopes (1)
 
-- Kin Lane — kin@apievangelist.com
+The permissions the API asks for.
+
+- [Hkust Scopes](https://apis.io/scopes/hkust/hkust-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Hkust Plans Pricing](https://apis.io/plans/hkust/hkust-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Hkust Rate Limits](https://apis.io/rate-limits/hkust/hkust-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Hkust Finops](https://apis.io/finops/hkust/hkust-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.ust.hk/)
+- [Documentation](https://itso.hkust.edu.hk/services/it-infrastructure/api-gateway-api-portal)
+- [API reference](https://itso.hkust.edu.hk/services/it-infrastructure/smart-campus-infrastructure/open-data-platform/retrieve-iot-data-api)
+- [Support](https://itso.hkust.edu.hk/)
+- [Privacy policy](https://dataprivacy.hkust.edu.hk/university-data-privacy-policy-statement/)
+
+## API Evangelist rating
+
+**Kin Score 40.0** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 57.1 |
+| Contract quality | 54.4 |
+| Contract governance | 3.8 |
+| Operational transparency | 31.6 |
+| Developer ergonomics | 42.9 |
+| Access clarity | 28.9 |
+
+**Agent readiness 33.6** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | na |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 30.4** — Education & Research
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/hkust/](https://apis.io/providers/hkust/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Hong Kong University of Science and Technology: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/hkust/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
